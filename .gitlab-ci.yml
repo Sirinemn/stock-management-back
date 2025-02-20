@@ -5,7 +5,7 @@ stages:
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  DOCKER_IMAGE: "registry.gitlab.com/Sirinemn/stock-management-back"
+  DOCKER_IMAGE: "docker.io/Sirinemn/stock-management-back"
 
 
 cache:
