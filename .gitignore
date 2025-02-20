@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+# Ignorer les fichiers compilés et les dépendances
+/target/
+/*.iml
+/.idea/
+/.gradle/
+/.mvn/
+*.log
+*.class
+
+# Ignorer les fichiers sensibles
+application.properties
+application.yml
+.env
+
