@@ -4,16 +4,18 @@ stages:
   - deploy
 
 variables:
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   DOCKER_IMAGE: "registry.gitlab.com/Sirinemn/stock-management-back"
 
-before_script:
-  - echo "⚙️ Initialisation de l'environnement..."
-  - export PATH=$PATH:/usr/local/maven/bin
 
 cache:
+  key: maven
   paths:
     - .m2/repository/
+
+before_script:
+  - mkdir -p ~/.m2
+  - echo "<settings><mirrors><mirror><id>central</id><mirrorOf>*</mirrorOf><url>https://repo.maven.apache.org/maven2/</url></mirror></mirrors></settings>" > ~/.m2/settings.xml
 
 # 1️⃣ Étape de Build
 build:
@@ -31,7 +33,7 @@ test:
   stage: test
   image: maven:3.8.4-openjdk-17
   script:
-    - mvn test $MAVEN_CLI_OPTS
+    - mvn test $MAVEN_OPTS
 
 # 3️⃣ Étape de Déploiement
 deploy:
