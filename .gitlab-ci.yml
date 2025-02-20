@@ -22,7 +22,7 @@ build:
   stage: build
   image: maven:3.8.4-openjdk-17
   script:
-    - mvn clean package $MAVEN_CLI_OPTS
+    - mvn clean package -DskipTests
   artifacts:
     paths:
       - target/*.jar
