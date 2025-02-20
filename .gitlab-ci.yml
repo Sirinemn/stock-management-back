@@ -31,7 +31,7 @@ build:
 # 2️⃣ Étape de Test
 test:
   stage: test
-  image: maven:3.8.4-openjdk-17
+  image: maven:3.9.6-eclipse-temurin-21
   script:
     - mvn test $MAVEN_OPTS
 
