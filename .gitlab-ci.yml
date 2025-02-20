@@ -5,7 +5,7 @@ stages:
 
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-  DOCKER_IMAGE: "registry.gitlab.com/ton-utilisateur/nom-du-projet"
+  DOCKER_IMAGE: "registry.gitlab.com/Sirinemn/stock-management-back"
 
 before_script:
   - echo "⚙️ Initialisation de l'environnement..."
@@ -41,7 +41,7 @@ deploy:
     - docker:dind
   script:
     - echo "🚀 Construction et push de l'image Docker"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_TOKEN" docker.io
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
   only:
