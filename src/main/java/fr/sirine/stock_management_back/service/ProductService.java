@@ -12,7 +12,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product findProductById(Integer id) {
+    public Product findById(Integer id) {
         return productRepository.findById(id).orElse(null);
     }
 }
