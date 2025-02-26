@@ -29,7 +29,7 @@ public class StockMovement {
 
     private int quantity;
     private LocalDateTime date = LocalDateTime.now();
-    enum TypeMovement {
+    public enum TypeMovement {
         ENTREE, SORTIE
     }
 

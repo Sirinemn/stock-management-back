@@ -11,16 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {User.class})
 public abstract class ProductMapper implements EntityMapper<ProductDto, Product> {
 
     @Autowired
     UserService userService;
 
-    @Mapping(target = "userId", expression = "java(product.getUser().getId())")
+    @Mapping(source = "user.id", target = "userId")
     public abstract ProductDto toDto(Product product);
 
-    @Mapping(target = "user", qualifiedByName = "findUserById")
+    @Mapping(source = "userId", target = "user", qualifiedByName = "findUserById")
     public abstract Product toEntity(ProductDto productDto);
 
     @Named("findUserById")

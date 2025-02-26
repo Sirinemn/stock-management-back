@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {User.class, Role.class})
 public interface UserMapper extends EntityMapper<UserDto, User> {
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = "rolesToStringList")
+    @Mapping(target = "roles", qualifiedByName = "rolesToStringList")
     UserDto toDto(User user);
 
-    @Mapping(target = "roles", source = "roles", qualifiedByName = "stringListToRoles")
+    @Mapping(target = "roles", qualifiedByName = "stringListToRoles")
+    @Mapping(target = "password", ignore = true)
     User toEntity(UserDto userDto);
 
     @Named("rolesToStringList")
