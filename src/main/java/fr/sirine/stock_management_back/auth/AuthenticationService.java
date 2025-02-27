@@ -6,6 +6,7 @@ import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
 import fr.sirine.stock_management_back.repository.RoleRepository;
+import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
@@ -61,6 +63,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .userId(user.getId())
                 .token(jwtToken)
+                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .build();
     }
 }

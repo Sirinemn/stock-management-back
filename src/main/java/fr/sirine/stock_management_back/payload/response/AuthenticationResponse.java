@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class AuthenticationResponse {
     private String token;
     private Integer userId;
+    private List<String> roles;
 }
