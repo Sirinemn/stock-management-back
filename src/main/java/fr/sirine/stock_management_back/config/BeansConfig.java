@@ -21,7 +21,7 @@ import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
-public class BeansConfig extends WebSecurityConfiguration {
+public class BeansConfig {
 
     private final UserDetailsService userDetailsService;
 
