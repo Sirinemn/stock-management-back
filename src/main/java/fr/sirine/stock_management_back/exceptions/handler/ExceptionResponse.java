@@ -1,4 +1,4 @@
-package fr.sirine.stock_management_back.handler;
+package fr.sirine.stock_management_back.exceptions.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
