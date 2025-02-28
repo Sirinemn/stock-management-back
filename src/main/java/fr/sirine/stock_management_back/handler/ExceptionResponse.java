@@ -1,11 +1,13 @@
 package fr.sirine.stock_management_back.handler;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ExceptionResponse {
     private int errorCode;
     private String message;
