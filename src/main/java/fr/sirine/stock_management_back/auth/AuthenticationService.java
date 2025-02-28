@@ -11,6 +11,8 @@ import fr.sirine.stock_management_back.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +58,12 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = ((User) auth.getPrincipal());
-        var jwtToken = jwtService.generateToken((User) auth.getPrincipal());
+
+        String userEmail = ((UserDetails) auth.getPrincipal()).getUsername();
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+
+        var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder()
                 .userId(user.getId())
@@ -65,4 +71,5 @@ public class AuthenticationService {
                 .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .build();
     }
+
 }
