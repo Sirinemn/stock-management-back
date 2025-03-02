@@ -1,9 +1,6 @@
 package fr.sirine.stock_management_back.exceptions.handler;
 
-import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
-import fr.sirine.stock_management_back.exceptions.custom.JwtTokenExpiredException;
-import fr.sirine.stock_management_back.exceptions.custom.UnauthorizedActionException;
-import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
+import fr.sirine.stock_management_back.exceptions.custom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +40,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedActionException.class)
     public ResponseEntity<ExceptionResponse> handleException(UnauthorizedActionException exp) {
         return buildResponseEntity(BusinessErrorCodes.UNAUTHORIZED_ACTION, exp.getMessage());
+    }
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(RoleNotFoundException exp) {
+        return buildResponseEntity(BusinessErrorCodes.ROLE_NOT_FOUND, exp.getMessage());
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {

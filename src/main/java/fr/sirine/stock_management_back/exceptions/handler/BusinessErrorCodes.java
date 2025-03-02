@@ -11,7 +11,8 @@ public enum BusinessErrorCodes {
     UNAUTHORIZED_ACTION(1003, "Action non autorisée", HttpStatus.FORBIDDEN),
     INVALID_REQUEST(1004, "Requête invalide", HttpStatus.BAD_REQUEST),
     INTERNAL_SERVER_ERROR(1005, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR),
-    JWT_TOKEN_EXPIRED(1006, "Session expiré", HttpStatus.UNAUTHORIZED);
+    JWT_TOKEN_EXPIRED(1006, "Session expiré", HttpStatus.UNAUTHORIZED),
+    ROLE_NOT_FOUND(1007, "Rôle non trouvé", HttpStatus.NOT_FOUND);
 
 
     private final int code;
