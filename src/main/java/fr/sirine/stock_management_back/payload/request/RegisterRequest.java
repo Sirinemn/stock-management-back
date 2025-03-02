@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.payload.request;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class RegisterRequest {
 
     @NotEmpty(message = "Firstname is mandatory")
