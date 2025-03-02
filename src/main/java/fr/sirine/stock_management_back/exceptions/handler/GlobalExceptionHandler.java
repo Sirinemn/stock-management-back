@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .errorCode(EMAIL_ALREADY_USED.getCode())
-                                .message(EMAIL_ALREADY_USED.getDescription())
+                                .message(exp.getMessage())
                                 .httpStatus(EMAIL_ALREADY_USED.getHttpStatus().value())
                                 .build()
                 );
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .errorCode(USER_NOT_FOUND.getCode())
-                                .message(USER_NOT_FOUND.getDescription())
+                                .message(exp.getMessage())
                                 .httpStatus(USER_NOT_FOUND.getHttpStatus().value())
                                 .build()
                 );
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .errorCode(JWT_TOKEN_EXPIRED.getCode())
-                                .message(JWT_TOKEN_EXPIRED.getDescription())
+                                .message(exp.getMessage())
                                 .httpStatus(JWT_TOKEN_EXPIRED.getHttpStatus().value())
                                 .build()
                 );
