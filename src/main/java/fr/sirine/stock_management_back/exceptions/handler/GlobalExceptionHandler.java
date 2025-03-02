@@ -4,15 +4,17 @@ import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedExcepti
 import fr.sirine.stock_management_back.exceptions.custom.JwtTokenExpiredException;
 import fr.sirine.stock_management_back.exceptions.custom.UnauthorizedActionException;
 import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private ResponseEntity<ExceptionResponse> buildResponseEntity(BusinessErrorCodes errorCode, String message) {
         return ResponseEntity
@@ -44,7 +46,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
-        exp.printStackTrace();
+        logger.error("An unexpected error occurred", exp);
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
