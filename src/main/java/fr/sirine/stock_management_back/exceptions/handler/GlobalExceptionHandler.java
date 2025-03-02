@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.exceptions.handler;
 
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
 import fr.sirine.stock_management_back.exceptions.custom.JwtTokenExpiredException;
+import fr.sirine.stock_management_back.exceptions.custom.UnauthorizedActionException;
 import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtTokenExpiredException.class)
     public ResponseEntity<ExceptionResponse> handleException(JwtTokenExpiredException exp) {
         return buildResponseEntity(BusinessErrorCodes.JWT_TOKEN_EXPIRED, exp.getMessage());
+    }
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<ExceptionResponse> handleException(UnauthorizedActionException exp) {
+        return buildResponseEntity(BusinessErrorCodes.UNAUTHORIZED_ACTION, exp.getMessage());
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
