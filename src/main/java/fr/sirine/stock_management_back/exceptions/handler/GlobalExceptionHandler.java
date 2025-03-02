@@ -1,13 +1,13 @@
 package fr.sirine.stock_management_back.exceptions.handler;
 
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
+import fr.sirine.stock_management_back.exceptions.custom.JwtTokenExpiredException;
 import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes.EMAIL_ALREADY_USED;
-import static fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes.USER_NOT_FOUND;
+import static fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +33,18 @@ public class GlobalExceptionHandler {
                                 .errorCode(USER_NOT_FOUND.getCode())
                                 .message(USER_NOT_FOUND.getDescription())
                                 .httpStatus(USER_NOT_FOUND.getHttpStatus().value())
+                                .build()
+                );
+    }
+    @ExceptionHandler(JwtTokenExpiredException.class)
+    public ResponseEntity<ExceptionResponse> handleException(JwtTokenExpiredException exp) {
+        return ResponseEntity
+                .status(JWT_TOKEN_EXPIRED.getHttpStatus())
+                .body(
+                        ExceptionResponse.builder()
+                                .errorCode(JWT_TOKEN_EXPIRED.getCode())
+                                .message(JWT_TOKEN_EXPIRED.getDescription())
+                                .httpStatus(JWT_TOKEN_EXPIRED.getHttpStatus().value())
                                 .build()
                 );
     }
