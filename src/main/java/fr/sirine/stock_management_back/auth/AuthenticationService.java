@@ -1,6 +1,8 @@
 package fr.sirine.stock_management_back.auth;
 
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
+import fr.sirine.stock_management_back.exceptions.custom.RoleNotFoundException;
 import fr.sirine.stock_management_back.jwt.JwtService;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterRequest;
@@ -37,9 +39,11 @@ public class AuthenticationService {
     }
 
     public void register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyUsedException();
+        }
         var userRole = roleRepository.findByName("USER")
-                // todo - better exception handling
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+                .orElseThrow(() -> new RoleNotFoundException("Role not found: USER"));
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -48,7 +52,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(List.of(userRole))
                 .build();
-        userRepository.save(user);
+            userRepository.save(user);
     }
 
     public AuthenticationResponse authenticate(LoginRequest request) {
@@ -61,7 +65,7 @@ public class AuthenticationService {
 
         String userEmail = ((UserDetails) auth.getPrincipal()).getUsername();
         var user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+                .orElseThrow(() -> new UsernameNotFoundException(userEmail));
 
         var jwtToken = jwtService.generateToken(user);
 
