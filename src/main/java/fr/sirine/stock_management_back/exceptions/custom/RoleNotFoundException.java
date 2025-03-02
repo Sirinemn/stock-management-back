@@ -7,7 +7,7 @@ public class RoleNotFoundException extends RuntimeException {
 
     public RoleNotFoundException(String roleName) {
         super("Role not found: " + roleName);
-        this.businessErrorCodes = BusinessErrorCodes.USER_NOT_FOUND;
+        this.businessErrorCodes = BusinessErrorCodes.ROLE_NOT_FOUND;
     }
 
     public BusinessErrorCodes getErrorCode() {
