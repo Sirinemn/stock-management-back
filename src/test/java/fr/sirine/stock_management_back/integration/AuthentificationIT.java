@@ -58,6 +58,22 @@ public class AuthentificationIT {
                 .andExpect(status().isAccepted());
     }
     @Test
+    void shouldreturnBadRequestWhenRegisteringWithInvalidRequest() throws Exception {
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .firstname("firstname")
+                .lastname("lastname")
+                .email("email")
+                .dateOfBirth(LocalDateTime.now())
+                .password("password")
+                .build();
+        String registrationRequestJson = objectMapper.writeValueAsString(registerRequest);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registrationRequestJson);
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+    }
+    @Test
     void shouldLoginSuccessfully() throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .email("email@test.fr")
