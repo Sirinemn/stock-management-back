@@ -4,6 +4,7 @@ import fr.sirine.stock_management_back.exceptions.custom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,6 +29,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<ExceptionResponse> handleException(EmailAlreadyUsedException exp) {
         return buildResponseEntity(BusinessErrorCodes.EMAIL_ALREADY_USED, exp.getMessage());
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleException() {
+        return buildResponseEntity(BusinessErrorCodes.BAD_CREDENTIALS, "Login and / or Password is incorrect");
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleException(UserNotFoundException exp) {
@@ -54,6 +59,7 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .message("Internal error, please contact the admin")
                                 .errorCode(INTERNAL_SERVER_ERROR.value())
+                                .httpStatus(INTERNAL_SERVER_ERROR.value())
                                 .build()
                 );
     }

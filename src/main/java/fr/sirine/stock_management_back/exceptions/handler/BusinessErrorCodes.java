@@ -3,6 +3,8 @@ package fr.sirine.stock_management_back.exceptions.handler;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+
 @Getter
 public enum BusinessErrorCodes {
 
@@ -12,7 +14,8 @@ public enum BusinessErrorCodes {
     INVALID_REQUEST(1004, "Requête invalide", HttpStatus.BAD_REQUEST),
     INTERNAL_SERVER_ERROR(1005, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR),
     JWT_TOKEN_EXPIRED(1006, "Session expiré", HttpStatus.UNAUTHORIZED),
-    ROLE_NOT_FOUND(1007, "Rôle non trouvé", HttpStatus.NOT_FOUND);
+    ROLE_NOT_FOUND(1007, "Rôle non trouvé", HttpStatus.NOT_FOUND),
+    BAD_CREDENTIALS(1008, "Login and / or Password is incorrect", FORBIDDEN);
 
 
     private final int code;
