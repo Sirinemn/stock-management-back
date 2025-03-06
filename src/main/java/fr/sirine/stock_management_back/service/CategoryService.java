@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,10 @@ public class CategoryService {
     }
     public void deleteCategory(Integer id) {
         categoryRepository.deleteById(id);
+    }
+
+    public Category findById(Integer categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(CategoryNotFoundException::new);
     }
 }
