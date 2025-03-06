@@ -4,9 +4,9 @@ import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +17,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User findById(Integer id) {
@@ -39,7 +42,7 @@ public class UserService {
         if (initialUser!= null) {
             initialUser.setFirstname(firstname);
             initialUser.setLastname(lastname);
-            initialUser.setPassword(password);
+            initialUser.setPassword(passwordEncoder.encode(password));
             initialUser.setEmail(email);
             initialUser.setLastModifiedDate(now);
             userRepository.save(initialUser);
