@@ -6,28 +6,19 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @Mapper(componentModel = "spring")
-public class CategoryMapper implements EntityMapper<Category, CategoryDto>{
+public abstract class CategoryMapper implements EntityMapper<CategoryDto, Category>{
     @Override
-    public Category toDto(CategoryDto entity) throws IOException {
+    public CategoryDto toDto(Category entity) {
         return null;
     }
 
     @Override
-    public CategoryDto toEntity(Category dto) {
+    public Category toEntity(CategoryDto dto) {
         return null;
     }
 
-    @Override
-    public List<CategoryDto> toEntity(List<Category> dtoList) {
-        return null;
-    }
 
-    @Override
-    public List<Category> toDto(List<CategoryDto> entityList) {
-        return null;
-    }
 }
