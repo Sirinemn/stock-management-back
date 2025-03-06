@@ -1,6 +1,8 @@
 package fr.sirine.stock_management_back.service;
 
+import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +12,16 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(categoryMapper::toDto).toList();
     }
     public void addCategory(String categoryName) {
         Category category = new Category(categoryName);
