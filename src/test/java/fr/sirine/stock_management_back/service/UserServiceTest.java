@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,5 +49,6 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(1)).save(user);
+        assertEquals("Jane", user.getFirstname());
     }
 }
