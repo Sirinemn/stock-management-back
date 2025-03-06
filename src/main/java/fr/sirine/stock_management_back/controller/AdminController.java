@@ -1,9 +1,12 @@
 package fr.sirine.stock_management_back.controller;
 
+import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
+import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
+import fr.sirine.stock_management_back.service.CategoryService;
 import fr.sirine.stock_management_back.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,15 +23,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @PreAuthorize("hasAuthority('ADMIN')")
-@Tag(name = "User Management", description = "Admin operations for managing users")
+@Tag(name = "Admin Management", description = "Admin operations for managing users and categories")
 public class AdminController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final CategoryService categoryService;
 
-    public AdminController(UserService userService, UserMapper userMapper) {
+    public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.categoryService = categoryService;
     }
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping
@@ -59,5 +64,17 @@ public class AdminController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @Operation(summary = "Delete a category", description = "Admin can delete a category by ID")
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 }
