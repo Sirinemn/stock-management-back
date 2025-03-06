@@ -15,4 +15,6 @@ public class ProductDto {
     private int quantity;
     private double price;
     private Integer userId;
+    private Integer categoryId; // Utilisé pour les requêtes
+    private String categoryName; // Utilisé pour l'affichage
 }
