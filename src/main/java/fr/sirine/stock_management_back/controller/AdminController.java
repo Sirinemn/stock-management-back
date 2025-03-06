@@ -48,7 +48,7 @@ public class AdminController {
                                                       @RequestParam("firstname") @NotBlank @Size(max = 63) String firstname,
                                                       @RequestParam("lastname") @NotBlank @Size(max = 63) String lastname,
                                                       @RequestParam("password") @NotBlank @Size(max = 63) String password,
-                                                        @RequestParam("email") @NotBlank @Size(max = 63) String email,
+                                                      @RequestParam("email") @NotBlank @Size(max = 63) String email,
                                                       @PathVariable Integer id) {
         userService.updateUser(firstname, lastname, password, email, id);
         MessageResponse messageResponse = new MessageResponse("Updated with success!");
