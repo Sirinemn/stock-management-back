@@ -4,6 +4,8 @@ import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService {
 
@@ -13,8 +15,8 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category[] getAllCategories() {
-        return categoryRepository.findAll().toArray(new Category[0]);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
     public void addCategory(String categoryName) {
         Category category = new Category(categoryName);
