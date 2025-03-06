@@ -7,6 +7,7 @@ import fr.sirine.stock_management_back.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,5 +32,17 @@ public class UserService {
                 .map(userMapper::toDto)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+    public void updateUser( String firstname, String lastname, String password, String email, Integer id){
+        User initialUser = userRepository.findById(id).orElse(null);
+        LocalDateTime now = LocalDateTime.now();
+        if (initialUser!= null) {
+            initialUser.setFirstname(firstname);
+            initialUser.setLastname(lastname);
+            initialUser.setPassword(password);
+            initialUser.setEmail(email);
+            initialUser.setLastModifiedDate(now);
+            userRepository.save(initialUser);
+        }
     }
 }
