@@ -16,4 +16,11 @@ public class CategoryService {
     public Category[] getAllCategories() {
         return categoryRepository.findAll().toArray(new Category[0]);
     }
+    public void addCategory(String categoryName) {
+        Category category = new Category(categoryName);
+        categoryRepository.save(category);
+    }
+    public void deleteCategory(Integer id) {
+        categoryRepository.deleteById(id);
+    }
 }
