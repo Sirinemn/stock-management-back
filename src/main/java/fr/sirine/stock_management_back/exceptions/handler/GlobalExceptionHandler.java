@@ -34,6 +34,11 @@ public class GlobalExceptionHandler {
         logger.error("Email already used", exp);
         return buildResponseEntity(BusinessErrorCodes.EMAIL_ALREADY_USED, exp.getMessage());
     }
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CategoryNotFoundException exp) {
+        logger.error("Category Not found", exp);
+        return buildResponseEntity(BusinessErrorCodes.CATEGORY_NOT_FOUND, exp.getMessage());
+    }
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleException() {
         logger.error("Bad credentials");
