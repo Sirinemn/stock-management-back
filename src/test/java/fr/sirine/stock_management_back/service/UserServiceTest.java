@@ -28,6 +28,9 @@ public class UserServiceTest {
     void setUp() {
         user = User.builder()
                 .id(1)
+                .firstname("John")
+                .lastname("Doe")
+                .password("password")
                 .email("john@oefr")
                 .build();
     }
@@ -36,5 +39,14 @@ public class UserServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(user));
         userService.findById(1);
         verify(userRepository, times(1)).findById(1);
+    }
+    @Test
+    void should_update_user() {
+        when(userRepository.findById(1)).thenReturn(Optional.ofNullable(user));
+
+        userService.updateUser("Jane", "Doe", "password", "jane@oefr", 1);
+
+        verify(userRepository, times(1)).findById(1);
+        verify(userRepository, times(1)).save(user);
     }
 }
