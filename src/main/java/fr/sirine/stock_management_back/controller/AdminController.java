@@ -36,19 +36,19 @@ public class AdminController {
         this.categoryService = categoryService;
     }
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
-    @GetMapping
+    @GetMapping("/users")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID")
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable String id) throws IOException {
 
         User user = userService.findById(Integer.parseInt(id));
         return ResponseEntity.ok(this.userMapper.toDto(user));
     }
     @Operation(summary = "Update user", description = "Update a user's details by their ID")
-    @PutMapping("/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<MessageResponse> updateUser(
                                                       @RequestParam("firstname") @NotBlank @Size(max = 63) String firstname,
                                                       @RequestParam("lastname") @NotBlank @Size(max = 63) String lastname,
@@ -60,7 +60,7 @@ public class AdminController {
         return new ResponseEntity<>( messageResponse, HttpStatus.OK);
     }
     @Operation(summary = "Delete user", description = "Delete a user by their ID")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -78,7 +78,7 @@ public class AdminController {
         return ResponseEntity.ok(categories);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
-    @PostMapping("/categories")
+    @PostMapping("/category")
     public ResponseEntity<MessageResponse> addCategory(@RequestParam("name") @NotBlank @Size(max = 63) String name) {
         categoryService.addCategory(name);
         MessageResponse messageResponse = new MessageResponse("Category added with success!");
