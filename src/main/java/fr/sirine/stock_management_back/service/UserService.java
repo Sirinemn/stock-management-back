@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +19,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
