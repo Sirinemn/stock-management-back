@@ -1,8 +1,11 @@
 package fr.sirine.stock_management_back.integration;
 
+import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
+import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
+import fr.sirine.stock_management_back.service.CategoryService;
 import fr.sirine.stock_management_back.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,12 +35,16 @@ public class AdminControllerIT {
 
     @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private CategoryService categoryService;
 
     @Autowired
     private MockMvc mockMvc;
 
     private User user;
     private UserDto userDto;
+    private Category category;
+    private CategoryDto categoryDto;
 
     @BeforeEach
     void setUp() {
@@ -52,6 +60,10 @@ public class AdminControllerIT {
                 .firstname("firstname")
                 .lastname("lastname")
                 .email("john@doe.fr")
+                .build();
+        category = Category.builder()
+                .id(1)
+                .name("category")
                 .build();
     }
     @Test
@@ -89,5 +101,28 @@ public class AdminControllerIT {
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
-
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void shouldDeleteCategory() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/categories/1");
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+    }
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void shouldReturnAllCategories() throws Exception {
+        when(categoryService.getAllCategories()).thenReturn(List.of(categoryDto));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/categories");
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void should_add_category() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/admin/categories")
+                .param("name", "newCategory");
+        mockMvc.perform(request)
+                .andExpect(jsonPath("$.message").value("Category added with success!"))
+                .andExpect(status().isCreated());
+    }
 }
