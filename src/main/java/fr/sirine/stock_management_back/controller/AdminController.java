@@ -77,4 +77,11 @@ public class AdminController {
         List<CategoryDto> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
+    @Operation(summary = "Add a category", description = "Admin can add a new category")
+    @PostMapping("/categories")
+    public ResponseEntity<MessageResponse> addCategory(@RequestParam("name") @NotBlank @Size(max = 63) String name) {
+        categoryService.addCategory(name);
+        MessageResponse messageResponse = new MessageResponse("Category added with success!");
+        return new ResponseEntity<>( messageResponse, HttpStatus.CREATED);
+    }
 }
