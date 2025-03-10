@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final PasswordEncoder passwordEncoder;
-    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -32,11 +32,21 @@ public class UserService {
     }
 
     public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
+        List<User> users = userRepository.findAll();
+        System.out.println("Users found: " + users);
+        logger.info("Users found: " + users);
+
+        List<User> nonAdminUsers = users.stream()
                 .filter(user -> user.getRoles().stream().noneMatch(role -> role.getName().equals("ADMIN")))
+                .toList();
+        logger.info("Non-admin users: " + nonAdminUsers);
+
+        List<UserDto> userDtos = nonAdminUsers.stream()
                 .map(userMapper::toDto)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        logger.info("User DTOs: " + userDtos);
+        return userDtos;
     }
     public void updateUser( String firstname, String lastname, String password, String email, Integer id){
         User initialUser = userRepository.findById(id).orElse(null);

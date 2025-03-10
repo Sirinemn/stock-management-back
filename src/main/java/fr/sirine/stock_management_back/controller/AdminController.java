@@ -2,7 +2,6 @@ package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
-import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
@@ -12,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,15 +30,24 @@ public class AdminController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final CategoryService categoryService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.categoryService = categoryService;
+        logger.info("AdminController initialized");
     }
+    @GetMapping("/test")
+    public String testEndpoint() {
+        logger.info("AdminController: /admin/test reached");
+        return "Test Successful";
+    }
+
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping("/users")
     public List<UserDto> getAllUsers() {
+        logger.info("Test Logger Info");
         return userService.getAllUsers();
     }
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID")
