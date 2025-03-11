@@ -1,7 +1,9 @@
 package fr.sirine.stock_management_back.service;
 
+import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -26,11 +28,14 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private UserMapper userMapper;
 
     @Mock
     private PasswordEncoder passwordEncoder;
 
     private User user;
+    private UserDto userDto;
     private Role role;
 
     @BeforeEach
@@ -46,6 +51,12 @@ public class UserServiceTest {
                 .password("password")
                 .email("john@oefr")
                 .roles(List.of(role))
+                .build();
+        userDto = UserDto.builder()
+                .id(1)
+                .firstname("John")
+                .lastname("Doe")
+                .email("john@oefr")
                 .build();
     }
     @Test
@@ -70,7 +81,6 @@ public class UserServiceTest {
         userService.deleteUser(1);
         verify(userRepository, times(1)).deleteById(1);
     }
-    @Disabled("Reason for disabling the test")
     @Test
     void should_get_all_users() {
         when(userRepository.findAll()).thenReturn(List.of(user));
