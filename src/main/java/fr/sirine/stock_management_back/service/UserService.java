@@ -50,7 +50,7 @@ public class UserService {
         return userDtos;
     }
     public void updateUser( String firstname, String lastname, String password, String email, Integer id){
-        User initialUser = userRepository.findById(id).orElse(null);
+        User initialUser = findById(id);
         LocalDateTime now = LocalDateTime.now();
         if (initialUser!= null) {
             initialUser.setFirstname(firstname);
