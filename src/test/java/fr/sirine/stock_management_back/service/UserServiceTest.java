@@ -42,7 +42,7 @@ public class UserServiceTest {
     void setUp() {
         role = Role.builder()
                 .id(1)
-                .name("ADMIN")
+                .name("USER")
                 .build();
         user = User.builder()
                 .id(1)
@@ -84,7 +84,9 @@ public class UserServiceTest {
     @Test
     void should_get_all_users() {
         when(userRepository.findAll()).thenReturn(List.of(user));
-        userService.getAllUsers();
+        when(userMapper.toDto(any(User.class))).thenReturn(userDto);
+        List<UserDto> result = userService.getAllUsers();
         verify(userRepository, times(1)).findAll();
+        assertEquals(1, result.size());
     }
 }
