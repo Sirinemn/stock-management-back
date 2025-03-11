@@ -5,12 +5,13 @@ import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
+import fr.sirine.stock_management_back.service.ICategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CategoryService {
+public class CategoryService implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
