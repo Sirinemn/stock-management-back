@@ -38,11 +38,6 @@ public class AdminController {
         this.categoryService = categoryService;
         logger.info("AdminController initialized");
     }
-    @GetMapping("/test")
-    public String testEndpoint() {
-        logger.info("AdminController: /admin/test reached");
-        return "Test Successful";
-    }
 
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping("/users")
