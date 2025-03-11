@@ -1,4 +1,4 @@
-package fr.sirine.stock_management_back.service;
+package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.repository.ProductRepository;

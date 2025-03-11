@@ -4,6 +4,7 @@ import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
+import fr.sirine.stock_management_back.service.impl.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

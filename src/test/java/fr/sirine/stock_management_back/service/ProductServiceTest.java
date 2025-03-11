@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.repository.ProductRepository;
+import fr.sirine.stock_management_back.service.impl.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -3,7 +3,7 @@ package fr.sirine.stock_management_back.mapper;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.StockMovement;
-import fr.sirine.stock_management_back.service.ProductService;
+import fr.sirine.stock_management_back.service.impl.ProductService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
