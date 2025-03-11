@@ -62,4 +62,11 @@ public class CategoryServiceTest {
         categoryService.findById(1);
         verify(categoryRepository, times(1)).findById(1);
     }
+    @Test
+    void should_find_category_by_name() {
+        when(categoryRepository.findByName("category")).thenReturn(category);
+        when(categoryMapper.toDto(category)).thenReturn(categoryDto);
+        categoryService.getByName("category");
+        verify(categoryRepository, times(1)).findByName("category");
+    }
 }
