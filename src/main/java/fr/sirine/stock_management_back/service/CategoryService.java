@@ -36,4 +36,8 @@ public class CategoryService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
     }
+    public CategoryDto getByName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return categoryMapper.toDto(category);
+    }
 }
