@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +29,7 @@ public class UserService {
     }
 
     public User findById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     public List<UserDto> getAllUsers() {
