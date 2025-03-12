@@ -16,7 +16,8 @@ public enum BusinessErrorCodes {
     JWT_TOKEN_EXPIRED(1006, "Session expiré", HttpStatus.UNAUTHORIZED),
     ROLE_NOT_FOUND(1007, "Rôle non trouvé", HttpStatus.NOT_FOUND),
     BAD_CREDENTIALS(1008, "Login and / or Password is incorrect", FORBIDDEN),
-    CATEGORY_NOT_FOUND(1009, "Catégorie non trouvée", HttpStatus.NOT_FOUND);
+    CATEGORY_NOT_FOUND(1009, "Catégorie non trouvée", HttpStatus.NOT_FOUND),
+    PRODUCT_NOT_FOUND(1010, "Produit non trouvé", HttpStatus.NOT_FOUND);
 
 
     private final int code;
