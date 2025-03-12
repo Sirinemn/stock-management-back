@@ -93,5 +93,17 @@ public class ProductServiceTest {
         verify(productMapper, times(1)).toEntity(productDto);
         verify(productRepository, times(1)).save(mappedProduct);
     }
-
+    @Test
+    void should_delete_product() {
+        doNothing().when(productRepository).deleteById(1);
+        productService.deleteProduct(1);
+        verify(productRepository, times(1)).deleteById(1);
+    }
+    @Test
+    void should_update_product() {
+        when(productRepository.findById(1)).thenReturn(Optional.ofNullable(product));
+        when(productRepository.save(product)).thenReturn(product);
+        productService.updateProduct(productDto);
+        verify(productRepository, times(1)).findById(1);
+    }
 }
