@@ -2,10 +2,10 @@ package fr.sirine.stock_management_back.exceptions.custom;
 
 import fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes;
 
-public class ProductNorFoundException extends RuntimeException{
+public class ProductNotFoundException extends RuntimeException{
     private final BusinessErrorCodes businessErrorCodes;
 
-    public ProductNorFoundException() {
+    public ProductNotFoundException() {
         super(BusinessErrorCodes.PRODUCT_NOT_FOUND.getDescription());
         this.businessErrorCodes = BusinessErrorCodes.PRODUCT_NOT_FOUND;
     }

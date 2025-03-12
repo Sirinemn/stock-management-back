@@ -39,8 +39,8 @@ public class GlobalExceptionHandler {
         logger.error("Category Not found", exp);
         return buildResponseEntity(BusinessErrorCodes.CATEGORY_NOT_FOUND, exp.getMessage());
     }
-    @ExceptionHandler(ProductNorFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleException(ProductNorFoundException exp) {
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ProductNotFoundException exp) {
         logger.error("Product Not found", exp);
         return buildResponseEntity(BusinessErrorCodes.PRODUCT_NOT_FOUND, exp.getMessage());
     }
