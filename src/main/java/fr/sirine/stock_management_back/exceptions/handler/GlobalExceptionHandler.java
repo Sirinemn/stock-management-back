@@ -39,6 +39,11 @@ public class GlobalExceptionHandler {
         logger.error("Category Not found", exp);
         return buildResponseEntity(BusinessErrorCodes.CATEGORY_NOT_FOUND, exp.getMessage());
     }
+    @ExceptionHandler(CategoryAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handleException(CategoryAlreadyExistException exp) {
+        logger.error("Category already exist", exp);
+        return buildResponseEntity(BusinessErrorCodes.CATEGORY_ALREADY_EXIST, exp.getMessage());
+    }
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleException(ProductNotFoundException exp) {
         logger.error("Product Not found", exp);

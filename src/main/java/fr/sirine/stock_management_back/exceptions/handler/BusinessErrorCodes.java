@@ -18,7 +18,8 @@ public enum BusinessErrorCodes {
     BAD_CREDENTIALS(1008, "Login and / or Password is incorrect", FORBIDDEN),
     CATEGORY_NOT_FOUND(1009, "Catégorie non trouvée", HttpStatus.NOT_FOUND),
     PRODUCT_NOT_FOUND(1010, "Produit non trouvé", HttpStatus.NOT_FOUND),
-    INSUFFICIENT_STOCK(1011, "Stock insuffisant", HttpStatus.BAD_REQUEST);
+    INSUFFICIENT_STOCK(1011, "Stock insuffisant", HttpStatus.BAD_REQUEST),
+    CATEGORY_ALREADY_EXIST(1012, "Catégorie déjà utilisée", HttpStatus.CONFLICT);
 
 
     private final int code;
