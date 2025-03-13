@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
         logger.error("Product Not found", exp);
         return buildResponseEntity(BusinessErrorCodes.PRODUCT_NOT_FOUND, exp.getMessage());
     }
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ExceptionResponse> handleException(InsufficientStockException exp) {
+        logger.error("Insufficient stock", exp);
+        return buildResponseEntity(BusinessErrorCodes.INSUFFICIENT_STOCK, exp.getMessage());
+    }
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleException() {
         logger.error("Bad credentials");

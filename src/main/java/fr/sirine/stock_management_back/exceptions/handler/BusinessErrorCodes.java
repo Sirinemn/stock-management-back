@@ -17,7 +17,8 @@ public enum BusinessErrorCodes {
     ROLE_NOT_FOUND(1007, "Rôle non trouvé", HttpStatus.NOT_FOUND),
     BAD_CREDENTIALS(1008, "Login and / or Password is incorrect", FORBIDDEN),
     CATEGORY_NOT_FOUND(1009, "Catégorie non trouvée", HttpStatus.NOT_FOUND),
-    PRODUCT_NOT_FOUND(1010, "Produit non trouvé", HttpStatus.NOT_FOUND);
+    PRODUCT_NOT_FOUND(1010, "Produit non trouvé", HttpStatus.NOT_FOUND),
+    INSUFFICIENT_STOCK(1011, "Stock insuffisant", HttpStatus.BAD_REQUEST);
 
 
     private final int code;
