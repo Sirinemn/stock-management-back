@@ -48,7 +48,6 @@ public class StockMovementService {
             product.setQuantity(product.getQuantity() - stockMovement.getQuantity());
         }
 
-
         // Mettre à jour le produit via le service
         productService.updateProduct(new ProductDto(product));
 
@@ -61,6 +60,30 @@ public class StockMovementService {
         return movements.stream()
                 .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getUser().getId(), m.getType().toString(), m.getQuantity(), m.getDate()))
                 .collect(Collectors.toList());
+    }
+    public List<StockMovementDto> getStockMovements(Integer userId, Integer productId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<StockMovement> movements;
+
+        if (userId != null && productId != null && startDate != null && endDate != null) {
+            movements = stockMovementRepository.findByUserIdAndProductIdAndDateBetween(userId, productId, startDate, endDate);
+        } else if (userId != null) {
+            movements = stockMovementRepository.findByUserId(userId);
+        } else if (productId != null) {
+            movements = stockMovementRepository.findAllByProductId(productId);
+        } else if (startDate != null && endDate != null) {
+            movements = stockMovementRepository.findByDateBetween(startDate, endDate);
+        } else {
+            movements = stockMovementRepository.findAll();
+        }
+
+        return movements.stream().map(m -> new StockMovementDto(
+                m.getId(),
+                m.getProduct().getId(),
+                m.getUser().getId(),
+                m.getType().toString(),
+                m.getQuantity(),
+                m.getDate())
+        ).collect(Collectors.toList());
     }
 }
 
