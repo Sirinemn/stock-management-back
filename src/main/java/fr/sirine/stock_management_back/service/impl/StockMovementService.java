@@ -4,9 +4,11 @@ import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.StockMovement;
+import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.IProductService;
+import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,20 +19,23 @@ import java.util.stream.Collectors;
 public class StockMovementService {
     private final StockMovementRepository stockMovementRepository;
     private final IProductService productService;
+    private final IUserService userService;
 
-    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService) {
+    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService, IUserService userService) {
         this.stockMovementRepository = stockMovementRepository;
         this.productService = productService;
+        this.userService = userService;
     }
 
     public StockMovementDto addStockMovement(StockMovementDto stockMovementDto) {
         // Récupérer le produit via le service
         Product product = productService.findById(stockMovementDto.getProductId());
-
+        User user = userService.findById(stockMovementDto.getUserId());
         StockMovement stockMovement = new StockMovement();
         stockMovement.setProduct(product);
         stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
         stockMovement.setQuantity(stockMovementDto.getQuantity());
+        stockMovement.setUser(user);
         stockMovement.setDate(LocalDateTime.now());
 
         // Mise à jour du stock du produit
@@ -48,13 +53,13 @@ public class StockMovementService {
         productService.updateProduct(new ProductDto(product));
 
         stockMovementRepository.save(stockMovement);
-        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate());
+        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getUser().getId(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate());
     }
 
     public List<StockMovementDto> getStockMovementsByProduct(Integer productId) {
         List<StockMovement> movements = stockMovementRepository.findAllByProductId((productId));
         return movements.stream()
-                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getType().toString(), m.getQuantity(), m.getDate()))
+                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getUser().getId(), m.getType().toString(), m.getQuantity(), m.getDate()))
                 .collect(Collectors.toList());
     }
 }
