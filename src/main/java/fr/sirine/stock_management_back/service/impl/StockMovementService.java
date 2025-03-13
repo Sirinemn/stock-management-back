@@ -1,0 +1,61 @@
+package fr.sirine.stock_management_back.service.impl;
+
+import fr.sirine.stock_management_back.dto.ProductDto;
+import fr.sirine.stock_management_back.dto.StockMovementDto;
+import fr.sirine.stock_management_back.entities.Product;
+import fr.sirine.stock_management_back.entities.StockMovement;
+import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
+import fr.sirine.stock_management_back.repository.StockMovementRepository;
+import fr.sirine.stock_management_back.service.IProductService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class StockMovementService {
+    private final StockMovementRepository stockMovementRepository;
+    private final IProductService productService;
+
+    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService) {
+        this.stockMovementRepository = stockMovementRepository;
+        this.productService = productService;
+    }
+
+    public StockMovementDto addStockMovement(StockMovementDto stockMovementDto) {
+        // Récupérer le produit via le service
+        Product product = productService.findById(stockMovementDto.getProductId());
+
+        StockMovement stockMovement = new StockMovement();
+        stockMovement.setProduct(product);
+        stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
+        stockMovement.setQuantity(stockMovementDto.getQuantity());
+        stockMovement.setDate(LocalDateTime.now());
+
+        // Mise à jour du stock du produit
+        if (stockMovement.getType() == StockMovement.TypeMovement.ENTREE) {
+            product.setQuantity(product.getQuantity() + stockMovement.getQuantity());
+        } else if (stockMovement.getType() == StockMovement.TypeMovement.SORTIE) {
+            if (product.getQuantity() < stockMovement.getQuantity()) {
+                throw new InsufficientStockException();
+            }
+            product.setQuantity(product.getQuantity() - stockMovement.getQuantity());
+        }
+
+
+        // Mettre à jour le produit via le service
+        productService.updateProduct(new ProductDto(product));
+
+        stockMovementRepository.save(stockMovement);
+        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate());
+    }
+
+    public List<StockMovementDto> getStockMovementsByProduct(Integer productId) {
+        List<StockMovement> movements = stockMovementRepository.findAllByProductId((productId));
+        return movements.stream()
+                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getType().toString(), m.getQuantity(), m.getDate()))
+                .collect(Collectors.toList());
+    }
+}
+
