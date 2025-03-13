@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.exceptions.custom.CategoryAlreadyExistException;
 import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
@@ -26,8 +27,12 @@ public class CategoryService implements ICategoryService {
         return categories.stream().map(categoryMapper::toDto).toList();
     }
     public void addCategory(String categoryName) {
-        Category category = new Category(categoryName);
-        categoryRepository.save(category);
+        if (categoryRepository.findByName(categoryName)!=null) {
+            throw new CategoryAlreadyExistException();
+        }else {
+            Category category = new Category(categoryName);
+            categoryRepository.save(category);
+        }
     }
     public void deleteCategory(Integer id) {
         categoryRepository.deleteById(id);
