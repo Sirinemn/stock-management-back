@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.StockMovementDto;
+import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.impl.StockMovementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,9 +30,9 @@ public class StockMovementController {
             @ApiResponse(responseCode = "404", description = "Produit non trouvé")
     })
     @PostMapping("/movement")
-    public ResponseEntity<StockMovementDto> addStockMovement(@RequestBody @Valid StockMovementDto stockMovementDto) {
+    public ResponseEntity<MessageResponse> addStockMovement(@RequestBody @Valid StockMovementDto stockMovementDto) {
         StockMovementDto savedMovement = stockMovementService.addStockMovement(stockMovementDto);
-        return ResponseEntity.ok(savedMovement);
+        return ResponseEntity.ok(new MessageResponse("Mouvement de stock ajouté avec succès"));
     }
     @Operation(summary = "Lister les mouvements d'un produit", description = "Retourne l'historique des entrées et sorties de stock pour un produit donné.")
     @ApiResponses(value = {
