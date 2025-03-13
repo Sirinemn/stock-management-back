@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.controller;
 import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.mapper.ProductMapper;
+import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.impl.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,9 +27,10 @@ public class ProductController {
 
     @Operation(summary = "Create a new product", description = "Adds a new product to the system")
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity<MessageResponse> createProduct(@RequestBody @Valid ProductDto productDto) {
         ProductDto createdProduct = productService.createProduct(productDto);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+        MessageResponse messageResponse = new MessageResponse("Product created successfully" );
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get product by ID", description = "Retrieve a product by its ID")
@@ -40,10 +42,11 @@ public class ProductController {
 
     @Operation(summary = "Update a product", description = "Update a product's details")
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable Integer id, @RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity<MessageResponse> updateProduct(@PathVariable Integer id, @RequestBody @Valid ProductDto productDto) {
         productDto.setId(id);
         ProductDto updatedProduct = productService.updateProduct(productDto);
-        return ResponseEntity.ok(updatedProduct);
+        MessageResponse messageResponse = new MessageResponse("Product updated successfully" );
+        return ResponseEntity.ok(messageResponse);
     }
 
     @Operation(summary = "Delete a product", description = "Delete a product by its ID")
