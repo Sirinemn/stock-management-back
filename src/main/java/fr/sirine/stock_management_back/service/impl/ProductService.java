@@ -8,11 +8,12 @@ import fr.sirine.stock_management_back.exceptions.custom.ProductNotFoundExceptio
 import fr.sirine.stock_management_back.mapper.ProductMapper;
 import fr.sirine.stock_management_back.repository.ProductRepository;
 import fr.sirine.stock_management_back.service.ICategoryService;
+import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductService {
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final ICategoryService categoryService;
     private final IUserService userService;
