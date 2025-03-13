@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -42,6 +44,21 @@ public class StockMovementController {
     @GetMapping("/movements/{productId}")
     public ResponseEntity<List<StockMovementDto>> getStockMovements(@PathVariable Integer productId) {
         List<StockMovementDto> movements = stockMovementService.getStockMovementsByProduct(productId);
+        return ResponseEntity.ok(movements);
+    }
+    @Operation(summary = "Obtenir l'historique des mouvements de stock",
+            description = "Filtrer par utilisateur, produit et plage de dates.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Historique récupéré avec succès")
+    })
+    @GetMapping("/history")
+    public ResponseEntity<List<StockMovementDto>> getStockMovements(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Integer productId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+        List<StockMovementDto> movements = stockMovementService.getStockMovements(userId, productId, startDate, endDate);
         return ResponseEntity.ok(movements);
     }
 }
