@@ -46,8 +46,20 @@ public class ProductService {
         productRepository.deleteById(id);
     }
     public ProductDto updateProduct(ProductDto productDto) {
-        Product product = productRepository.findById(productDto.getId()).orElseThrow(ProductNotFoundException::new);
-        assert product != null;
+        Product product = productRepository.findById(productDto.getId())
+                .orElseThrow(ProductNotFoundException::new);
+
+        // 🔹 Met à jour les champs
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setQuantity(productDto.getQuantity());
+        product.setPrice(productDto.getPrice());
+
+        //mettre à jour la catégorie
+        Category category = categoryService.findById(productDto.getCategoryId());
+        product.setCategory(category);
+
         return productMapper.toDto(productRepository.save(product));
     }
+
 }
