@@ -6,8 +6,8 @@ public class CategoryNotFoundException extends RuntimeException {
 
     private final BusinessErrorCodes businessErrorCodes;
     public CategoryNotFoundException() {
-        super(BusinessErrorCodes.CATEGORY_NOT_FOUND.getDescription());
-        this.businessErrorCodes = BusinessErrorCodes.CATEGORY_NOT_FOUND;
+        super(BusinessErrorCodes.CATEGORY_ALREADY_EXIST.getDescription());
+        this.businessErrorCodes = BusinessErrorCodes.CATEGORY_ALREADY_EXIST;
     }
     public BusinessErrorCodes getErrorCode() {
         return businessErrorCodes;
