@@ -29,6 +29,10 @@ public class StockMovement {
 
     private int quantity;
     private LocalDateTime date = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     public enum TypeMovement {
         ENTREE, SORTIE
     }
