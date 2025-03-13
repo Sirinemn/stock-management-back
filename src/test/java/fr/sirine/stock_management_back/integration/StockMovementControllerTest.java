@@ -142,4 +142,31 @@ class StockMovementControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
     }
+    @Test
+    @DisplayName("Récupérer l'historique des mouvements de stock par utilisateur")
+    @WithMockUser(username = "mockUser", authorities = {"USER"})
+    void testGetStockMovementsByUser() throws Exception {
+        User user = new User();
+        user.setFirstname("admin");
+        user.setPassword("password");
+        userRepository.save(user);
+
+        Product product = new Product();
+        product.setName("Laptop");
+        product.setDescription("High-end laptop");
+        product.setQuantity(10);
+        productRepository.save(product);
+
+        StockMovement stockMovement = new StockMovement(null, product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), user);
+        stockMovementRepository.save(stockMovement);
+
+        mockMvc.perform(get("/stocks/history")
+                        .param("userId", user.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].userId").value(user.getId()))
+                .andExpect(jsonPath("$[0].productId").value(product.getId()))
+                .andExpect(jsonPath("$[0].quantity").value(5));
+    }
+
 }
