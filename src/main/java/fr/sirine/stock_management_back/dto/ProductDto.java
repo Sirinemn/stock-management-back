@@ -15,6 +15,7 @@ public class ProductDto {
     private String description;
     private int quantity;
     private double price;
+    private int threshold;
     private Integer userId;
     private Integer categoryId; // Utilisé pour les requêtes
     private String categoryName; // Utilisé pour l'affichage
@@ -25,6 +26,7 @@ public class ProductDto {
         this.description = product.getDescription();
         this.quantity = product.getQuantity();
         this.price = product.getPrice();
+        this.threshold = product.getThreshold();
         this.userId = product.getUser().getId();
         this.categoryId = product.getCategory().getId();
         this.categoryName = product.getCategory().getName();

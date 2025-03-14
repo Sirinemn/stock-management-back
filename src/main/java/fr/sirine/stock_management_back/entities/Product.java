@@ -19,6 +19,7 @@ public class Product {
     private String description;
     private int quantity;
     private double price;
+    private int threshold; // le seuil d'alerte
 
     @ManyToOne
     @JoinColumn(name = "user_id")
