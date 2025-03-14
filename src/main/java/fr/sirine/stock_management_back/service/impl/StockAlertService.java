@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.dto.UserDto;
+import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.Product;
 import org.springframework.stereotype.Service;
 
