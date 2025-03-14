@@ -69,8 +69,14 @@ public class UserServiceTest {
     void should_update_user() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(user));
         when(passwordEncoder.encode("password")).thenReturn("password");
+        UserDto userDtoUpdated = UserDto.builder()
+                .id(1)
+                .firstname("Jane")
+                .lastname("Doe")
+                .email("jane@oefr")
+                .build();
 
-        userService.updateUser(userDto, "password");
+        userService.updateUser(userDtoUpdated, "password");
 
         verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(1)).save(user);

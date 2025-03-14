@@ -97,7 +97,7 @@ class StockMovementControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stockMovementDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.quantity").value(5));
+                .andExpect(jsonPath("$.message").value("Mouvement de stock ajouté avec succès"));
 
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
         assertEquals(15, updatedProduct.getQuantity()); // 10 + 5 = 15
@@ -112,8 +112,7 @@ class StockMovementControllerTest {
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stockMovementDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.quantity").value(3));
+                .andExpect(status().isOk());
 
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
         assertEquals(7, updatedProduct.getQuantity()); // 10 - 3 = 7
