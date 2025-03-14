@@ -73,7 +73,7 @@ public class AuthenticationServiceTest {
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        authenticationService.register(registerRequest);
+        authenticationService.register(registerRequest,"USER");
 
         verify(userRepository, times(1)).save(any(User.class));
 
@@ -118,7 +118,7 @@ public class AuthenticationServiceTest {
         when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(true);
 
         // When / Then
-        assertThatThrownBy(() -> authenticationService.register(registerRequest))
+        assertThatThrownBy(() -> authenticationService.register(registerRequest,"USER"))
                 .isInstanceOf(EmailAlreadyUsedException.class);
     }
 
