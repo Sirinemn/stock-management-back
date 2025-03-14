@@ -50,14 +50,14 @@ public class UserService implements IUserService {
         logger.info("User DTOs: " + userDtos);
         return userDtos;
     }
-    public void updateUser( String firstname, String lastname, String password, String email, Integer id){
-        User initialUser = findById(id);
+    public void updateUser( UserDto userDto, String password) {
+        User initialUser = findById(userDto.getId());
         LocalDateTime now = LocalDateTime.now();
         if (initialUser!= null) {
-            initialUser.setFirstname(firstname);
-            initialUser.setLastname(lastname);
+            initialUser.setFirstname(userDto.getFirstname());
+            initialUser.setLastname(userDto.getLastname());
             initialUser.setPassword(passwordEncoder.encode(password));
-            initialUser.setEmail(email);
+            initialUser.setEmail(userDto.getEmail());
             initialUser.setLastModifiedDate(now);
             userRepository.save(initialUser);
         }

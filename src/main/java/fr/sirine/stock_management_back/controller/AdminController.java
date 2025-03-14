@@ -9,6 +9,7 @@ import fr.sirine.stock_management_back.service.impl.CategoryService;
 import fr.sirine.stock_management_back.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.slf4j.Logger;
@@ -55,12 +56,10 @@ public class AdminController {
     @Operation(summary = "Update user", description = "Update a user's details by their ID")
     @PutMapping("/users/{id}")
     public ResponseEntity<MessageResponse> updateUser(
-                                                      @RequestParam("firstname") @NotBlank @Size(max = 63) String firstname,
-                                                      @RequestParam("lastname") @NotBlank @Size(max = 63) String lastname,
-                                                      @RequestParam("password") @NotBlank @Size(max = 63) String password,
-                                                      @RequestParam("email") @NotBlank @Size(max = 63) String email,
-                                                      @PathVariable Integer id) {
-        userService.updateUser(firstname, lastname, password, email, id);
+                                                      @RequestBody @Valid UserDto userDto,
+                                                      @RequestParam("password") @NotBlank @Size(max = 63) String password
+                                                      ) {
+        userService.updateUser(userDto, password);
         MessageResponse messageResponse = new MessageResponse("Updated with success!");
         return new ResponseEntity<>( messageResponse, HttpStatus.OK);
     }

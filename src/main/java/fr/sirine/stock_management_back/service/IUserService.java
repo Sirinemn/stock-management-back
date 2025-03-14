@@ -8,6 +8,6 @@ import java.util.List;
 public interface IUserService {
     User findById(Integer id);
     List<UserDto> getAllUsers();
-    void updateUser(String firstname, String lastname, String password, String email, Integer id);
+    void updateUser(UserDto userDto, String password);
     void deleteUser(Integer id);
 }

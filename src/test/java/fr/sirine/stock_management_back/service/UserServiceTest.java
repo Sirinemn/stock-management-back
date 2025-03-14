@@ -70,7 +70,7 @@ public class UserServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(user));
         when(passwordEncoder.encode("password")).thenReturn("password");
 
-        userService.updateUser("Jane", "Doe", "password", "jane@oefr", 1);
+        userService.updateUser(userDto, "password");
 
         verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(1)).save(user);
