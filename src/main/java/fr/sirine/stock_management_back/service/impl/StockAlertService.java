@@ -35,9 +35,7 @@ public class StockAlertService {
     }
 
     private List<UserDto> getAdminsToNotify() {
-        return userService.getAllUsers().stream()
-                .filter(user -> user.getRoles().contains("ADMIN"))
-                .collect(Collectors.toList());
+        return userService.findByRole("ADMIN");
     }
 
 }
