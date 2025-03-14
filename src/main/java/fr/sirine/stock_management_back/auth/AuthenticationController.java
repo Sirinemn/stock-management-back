@@ -1,5 +1,7 @@
 package fr.sirine.stock_management_back.auth;
 
+import fr.sirine.stock_management_back.email.EmailService;
+import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
@@ -25,10 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final EmailService emailService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService, EmailService emailService) {
         this.authenticationService = authenticationService;
+        this.emailService = emailService;
     }
 
     @Operation(summary = "Authentification utilisateur", description = "Permet à un utilisateur de se connecter avec ses identifiants")
@@ -56,7 +60,20 @@ public class AuthenticationController {
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest, "USER");  // Inscrit un USER
+        // Inscription de l'utilisateur et récupération des informations
+        User newUser = authenticationService.register(registerRequest, "USER");
+
+        // Construction du message contenant les identifiants
+        String emailMessage = String.format(
+                "Bonjour %s %s,\n\nVotre compte a été créé avec succès.\n\nIdentifiants :\nEmail : %s\nMot de passe : %s\n\nMerci de changer votre mot de passe après connexion.\n\nCordialement,\nL'équipe de gestion des stocks",
+                newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), registerRequest.getPassword()
+        );
+
+        // Envoi de l'email
+        emailService.sendEmail(newUser.getEmail(), "Inscription réussie", emailMessage);
+
         return ResponseEntity.accepted().build();
     }
+
+
 }

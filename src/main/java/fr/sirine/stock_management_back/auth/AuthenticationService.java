@@ -38,7 +38,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public void register(RegisterRequest request, String role) {
+    public User register(RegisterRequest request, String role) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
@@ -46,10 +46,12 @@ public class AuthenticationService {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
         user.setRoles(List.of(roleRepository.findByName(role).orElseThrow(RoleNotFoundException::new)));
-        userRepository.save(user);
-    }
 
+        return userRepository.save(user);
+    }
     public AuthenticationResponse authenticate(LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
