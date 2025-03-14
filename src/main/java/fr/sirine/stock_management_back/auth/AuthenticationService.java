@@ -38,21 +38,16 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public void register(RegisterRequest request) {
+    public void register(RegisterRequest request, String role) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
-        var userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("Role not found: USER"));
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .dateOfBirth(request.getDateOfBirth())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(List.of(userRole))
-                .build();
-            userRepository.save(user);
+
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRoles(List.of(roleRepository.findByName(role).orElseThrow(RoleNotFoundException::new)));
+        userRepository.save(user);
     }
 
     public AuthenticationResponse authenticate(LoginRequest request) {

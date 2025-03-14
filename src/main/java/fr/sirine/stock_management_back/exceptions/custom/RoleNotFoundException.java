@@ -5,8 +5,8 @@ import fr.sirine.stock_management_back.exceptions.handler.BusinessErrorCodes;
 public class RoleNotFoundException extends RuntimeException {
     private final BusinessErrorCodes businessErrorCodes;
 
-    public RoleNotFoundException(String roleName) {
-        super("Role not found: " + roleName);
+    public RoleNotFoundException() {
+        super("Role not found: " + BusinessErrorCodes.ROLE_NOT_FOUND.getDescription());
         this.businessErrorCodes = BusinessErrorCodes.ROLE_NOT_FOUND;
     }
 
