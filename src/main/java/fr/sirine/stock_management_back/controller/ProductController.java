@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/products")
@@ -27,6 +28,7 @@ public class ProductController {
 
     @Operation(summary = "Create a new product", description = "Adds a new product to the system")
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> createProduct(@RequestBody @Valid ProductDto productDto) {
         ProductDto createdProduct = productService.createProduct(productDto);
         MessageResponse messageResponse = new MessageResponse("Product created successfully" );
@@ -42,6 +44,7 @@ public class ProductController {
 
     @Operation(summary = "Update a product", description = "Update a product's details")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> updateProduct(@PathVariable Integer id, @RequestBody @Valid ProductDto productDto) {
         productDto.setId(id);
         ProductDto updatedProduct = productService.updateProduct(productDto);
@@ -51,6 +54,7 @@ public class ProductController {
 
     @Operation(summary = "Delete a product", description = "Delete a product by its ID")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();

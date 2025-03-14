@@ -24,7 +24,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 @Tag(name = "Admin Management", description = "Admin operations for managing users and categories")
 public class AdminController {
 
@@ -42,12 +41,14 @@ public class AdminController {
 
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UserDto> getAllUsers() {
         logger.info("Test Logger Info");
         return userService.getAllUsers();
     }
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID")
     @GetMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> getUser(@PathVariable String id) throws IOException {
 
         User user = userService.findById(Integer.parseInt(id));
@@ -55,6 +56,7 @@ public class AdminController {
     }
     @Operation(summary = "Update user", description = "Update a user's details by their ID")
     @PutMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> updateUser(
                                                       @RequestBody @Valid UserDto userDto,
                                                       @RequestParam("password") @NotBlank @Size(max = 63) String password
@@ -65,12 +67,14 @@ public class AdminController {
     }
     @Operation(summary = "Delete user", description = "Delete a user by their ID")
     @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @Operation(summary = "Delete a category", description = "Admin can delete a category by ID")
     @DeleteMapping("/categories/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -83,6 +87,7 @@ public class AdminController {
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
     @PostMapping("/category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<MessageResponse> addCategory(@RequestParam("name") @NotBlank @Size(max = 63) String name) {
         categoryService.addCategory(name);
         MessageResponse messageResponse = new MessageResponse("Category added with success!");
