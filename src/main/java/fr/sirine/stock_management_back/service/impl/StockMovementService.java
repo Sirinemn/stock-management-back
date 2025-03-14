@@ -20,17 +20,20 @@ public class StockMovementService {
     private final StockMovementRepository stockMovementRepository;
     private final IProductService productService;
     private final IUserService userService;
+    private final StockAlertService stockAlertService;
 
-    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService, IUserService userService) {
+    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService, IUserService userService, StockAlertService stockAlertService) {
         this.stockMovementRepository = stockMovementRepository;
         this.productService = productService;
         this.userService = userService;
+        this.stockAlertService = stockAlertService;
     }
 
     public StockMovementDto addStockMovement(StockMovementDto stockMovementDto) {
         // Récupérer le produit via le service
         Product product = productService.findById(stockMovementDto.getProductId());
         User user = userService.findById(stockMovementDto.getUserId());
+
         StockMovement stockMovement = new StockMovement();
         stockMovement.setProduct(product);
         stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
@@ -50,6 +53,7 @@ public class StockMovementService {
 
         // Mettre à jour le produit via le service
         productService.updateProduct(new ProductDto(product));
+        stockAlertService.checkStockLevel(product);
 
         stockMovementRepository.save(stockMovement);
         return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getUser().getId(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate());
