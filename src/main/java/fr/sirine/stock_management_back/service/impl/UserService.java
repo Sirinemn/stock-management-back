@@ -67,7 +67,7 @@ public class UserService implements IUserService {
         this.userRepository.deleteById(id);
     }
     public List<UserDto> findByRole(String role) {
-        List<User> users = userRepository.findByRole(role);
+        List<User> users = userRepository.findByRoles_Name(role);
         return users.stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
