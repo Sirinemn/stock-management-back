@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,14 +45,18 @@ public class AuthenticationController {
         return  ResponseEntity.ok(authenticationService.authenticate(loginRequest));
     }
 
-    @Operation(summary = "Inscription utilisateur", description = "Permet à un utilisateur de s'inscrire")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Inscription réussie"),
-            @ApiResponse(responseCode = "400", description = "Requête invalide")
-    })
+    @Operation(summary = "Inscription administrateur", description = "Permet à un administrateur de s'inscrire en premier")
     @PostMapping("/register")
-    private ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest);
+    public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterRequest registerRequest) {
+        authenticationService.register(registerRequest, "ADMIN");  // Inscrit un ADMIN
+        return ResponseEntity.accepted().build();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
+    @PostMapping("/register/user")
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+        authenticationService.register(registerRequest, "USER");  // Inscrit un USER
         return ResponseEntity.accepted().build();
     }
 }
