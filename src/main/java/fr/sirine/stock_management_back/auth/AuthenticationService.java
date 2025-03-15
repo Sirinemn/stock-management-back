@@ -58,6 +58,8 @@ public class AuthenticationService {
         // Appliquer firstLogin uniquement pour les utilisateurs normaux (USER)
         if ("USER".equalsIgnoreCase(role)) {
             user.setFirstLogin(true);
+        } else {
+        user.setFirstLogin(false); // Explicite pour les ADMINs
         }
 
         userRepository.save(user);
@@ -72,7 +74,6 @@ public class AuthenticationService {
 
         return user;
     }
-
 
     public AuthenticationResponse authenticate(LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
