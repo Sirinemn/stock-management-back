@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.auth;
 
 import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
@@ -16,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -73,6 +71,12 @@ public class AuthenticationController {
         emailService.sendEmail(newUser.getEmail(), "Inscription réussie", emailMessage);
 
         return ResponseEntity.accepted().build();
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/users/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        authenticationService.changePassword(request);
+        return ResponseEntity.ok("Mot de passe mis à jour avec succès");
     }
 
 
