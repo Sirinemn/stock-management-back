@@ -4,6 +4,7 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
 import fr.sirine.stock_management_back.exceptions.custom.RoleNotFoundException;
 import fr.sirine.stock_management_back.jwt.JwtService;
+import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
