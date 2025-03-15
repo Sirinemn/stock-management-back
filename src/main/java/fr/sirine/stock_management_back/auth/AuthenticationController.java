@@ -25,12 +25,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final EmailService emailService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     public AuthenticationController(AuthenticationService authenticationService, EmailService emailService) {
         this.authenticationService = authenticationService;
-        this.emailService = emailService;
     }
 
     @Operation(summary = "Authentification utilisateur", description = "Permet à un utilisateur de se connecter avec ses identifiants")
@@ -58,26 +56,15 @@ public class AuthenticationController {
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
-        // Inscription de l'utilisateur et récupération des informations
-        User newUser = authenticationService.register(registerRequest, "USER");
-
-        // Construction du message contenant les identifiants
-        String emailMessage = String.format(
-                "Bonjour %s %s,\n\nVotre compte a été créé avec succès.\n\nIdentifiants :\nEmail : %s\nMot de passe : %s\n\nMerci de changer votre mot de passe après connexion.\n\nCordialement,\nL'équipe de gestion des stocks",
-                newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), registerRequest.getPassword()
-        );
-
-        // Envoi de l'email
-        emailService.sendEmail(newUser.getEmail(), "Inscription réussie", emailMessage);
-
+        authenticationService.register(registerRequest, "USER"); // L'email est déjà envoyé dans le service
         return ResponseEntity.accepted().build();
     }
+
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/users/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
         authenticationService.changePassword(request);
         return ResponseEntity.ok("Mot de passe mis à jour avec succès");
     }
-
 
 }
