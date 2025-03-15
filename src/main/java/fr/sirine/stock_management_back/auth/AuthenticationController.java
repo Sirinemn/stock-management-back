@@ -56,7 +56,7 @@ public class AuthenticationController {
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest, "USER"); // L'email est déjà envoyé dans le service
+        authenticationService.register(registerRequest, "USER"); // Inscrit un USER
         return ResponseEntity.accepted().build();
     }
 
