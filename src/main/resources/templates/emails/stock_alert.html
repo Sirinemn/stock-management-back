@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Alerte Stock</title>
+</head>
+<body>
+<p>Bonjour <span th:text="${adminName}"></span>,</p>
+
+<p>Le produit "<span th:text="${productName}"></span>" est en stock faible !</p>
+
+<p>Quantité restante : <span th:text="${quantity}"></span></p>
+
+<p>Merci de vérifier le stock au plus vite.</p>
+
+<p>Cordialement,</p>
+<p>L'équipe de gestion des stocks</p>
+</body>
+</html>

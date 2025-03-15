@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription réussie</title>
+</head>
+<body>
+<p>Bonjour <span th:text="${firstname}"></span> <span th:text="${lastname}"></span>,</p>
+
+<p>Votre compte a été créé avec succès.</p>
+
+<p><strong>Identifiants :</strong></p>
+<ul>
+    <li>Email : <span th:text="${email}"></span></li>
+    <li>Mot de passe : <span th:text="${password}"></span></li>
+</ul>
+
+<p>Merci de vous connecter et de changer votre mot de passe dès votre première connexion.</p>
+
+<p>Cordialement,</p>
+<p>L'équipe de gestion des stocks</p>
+</body>
+</html>
