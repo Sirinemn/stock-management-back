@@ -1,5 +1,6 @@
 package fr.sirine.stock_management_back.auth;
 
+import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
@@ -44,7 +45,8 @@ public class AuthenticationServiceTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private AuthenticationManager authenticationManager;
-
+    @Mock
+    private EmailService emailService;
 
     private RegisterRequest registerRequest;
     private LoginRequest loginRequest;
@@ -72,6 +74,7 @@ public class AuthenticationServiceTest {
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
+        doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
 
         authenticationService.register(registerRequest,"USER");
 
