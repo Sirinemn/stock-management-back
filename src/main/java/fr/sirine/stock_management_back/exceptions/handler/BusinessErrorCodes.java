@@ -19,7 +19,8 @@ public enum BusinessErrorCodes {
     CATEGORY_NOT_FOUND(1009, "Catégorie non trouvée", HttpStatus.NOT_FOUND),
     PRODUCT_NOT_FOUND(1010, "Produit non trouvé", HttpStatus.NOT_FOUND),
     INSUFFICIENT_STOCK(1011, "Stock insuffisant", HttpStatus.BAD_REQUEST),
-    CATEGORY_ALREADY_EXIST(1012, "Catégorie déjà utilisée", HttpStatus.CONFLICT);
+    CATEGORY_ALREADY_EXIST(1012, "Catégorie déjà utilisée", HttpStatus.CONFLICT),
+    EMAIL_SERVICE_ERROR(1013, "Erreur du service d'email", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
     private final int code;
