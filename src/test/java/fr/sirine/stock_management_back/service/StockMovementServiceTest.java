@@ -82,5 +82,11 @@ public class StockMovementServiceTest {
 
         verify(stockMovementRepository, times(1)).findAllByProductId(1);
     }
+    @Test
+    public void getStockMovementsTest() {
+        stockMovementService.getStockMovements(1, 1, null, null);
 
+        verify(stockMovementRepository, times(1)).findByUserId(1);
+        verify(stockMovementRepository, times(0)).findAllByProductId(1);
+    }
 }
