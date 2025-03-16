@@ -10,4 +10,5 @@ public interface IUserService {
     List<UserDto> getAllUsers();
     void updateUser(UserDto userDto, String password);
     void deleteUser(Integer id);
+    List<UserDto> findByRole(String role);
 }

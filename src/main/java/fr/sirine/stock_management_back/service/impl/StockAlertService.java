@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.service.impl;
 import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.Product;
+import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class StockAlertService {
     private final EmailService emailService;
 
-    private final UserService userService;
+    private final IUserService userService;
 
     public StockAlertService(EmailService emailService, UserService userService) {
         this.emailService = emailService;
