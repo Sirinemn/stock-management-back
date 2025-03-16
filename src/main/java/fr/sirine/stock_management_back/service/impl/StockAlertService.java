@@ -35,7 +35,7 @@ public class StockAlertService {
                     "productName", product.getName(),
                     "quantity", product.getQuantity()
             );
-            emailService.sendEmail(admin.getEmail(), subject, "stock_alert", variables );
+            emailService.sendEmail(admin.getEmail(), subject, "emails/stock_alert", variables );
         }
     }
 
