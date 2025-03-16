@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,13 +65,14 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        // 📧 Envoyer un email de confirmation d'inscription
-        String emailMessage = String.format(
-                "Bonjour %s,\n\nVotre compte a été créé avec succès.\n\nIdentifiants :\nEmail : %s\n\nMerci de vous connecter et de changer votre mot de passe dès votre première connexion.\n\nCordialement,\nL'équipe de gestion des stocks",
-                user.getFirstname() + " " + user.getLastname(), user.getEmail()
+        Map<String, Object> emailMessage = Map.of(
+                "firstname", user.getFirstname(),
+                "lastname", user.getLastname(),
+                "email", user.getEmail(),
+                "password", request.getPassword()
         );
 
-        emailService.sendEmail(user.getEmail(), "Inscription réussie", emailMessage);
+        emailService.sendEmail(user.getEmail(), "Inscription réussie","registration" , emailMessage);
 
         return user;
     }
