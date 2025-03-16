@@ -6,6 +6,7 @@ import fr.sirine.stock_management_back.entities.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StockAlertService {
@@ -24,13 +25,16 @@ public class StockAlertService {
     }
 
     private void sendStockAlert(Product product) {
-        String subject = "Alerte : Stock faible pour " + product.getName();
-        String message = "Le produit '" + product.getName() + "' est en stock faible ! "
-                + "Quantité restante : " + product.getQuantity();
+        String subject = "Alert: Stock level below threshold";
 
         List<UserDto> admins = getAdminsToNotify();
         for (UserDto admin : admins) {
-            emailService.sendEmail(admin.getEmail(), subject, message);
+            Map<String, Object> variables = Map.of(
+                    "adminName", admin.getFirstname() + " " + admin.getLastname(),
+                    "productName", product.getName(),
+                    "quantity", product.getQuantity()
+            );
+            emailService.sendEmail(admin.getEmail(), subject, "stock_alert", variables );
         }
     }
 
