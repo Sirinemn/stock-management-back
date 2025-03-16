@@ -69,7 +69,7 @@ public class AuthenticationService {
                 "firstname", user.getFirstname(),
                 "lastname", user.getLastname(),
                 "email", user.getEmail(),
-                "password", request.getPassword()
+                "password", request.getPassword().substring(0, 3) + "****"
         );
 
         emailService.sendEmail(user.getEmail(), "Inscription réussie","registration" , emailMessage);
