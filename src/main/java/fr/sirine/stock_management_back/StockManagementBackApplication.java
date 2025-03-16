@@ -34,6 +34,12 @@ public class StockManagementBackApplication {
 			if (roleRepository.findByName("ADMIN").isEmpty()) {
 				roleRepository.save(Role.builder().name("ADMIN").build());
 			}
+			if (roleRepository.findByName("CLIENT").isEmpty()) {
+				roleRepository.save(Role.builder().name("CLIENT").build());
+			}
+			if (roleRepository.findByName("SUPPLIER").isEmpty()) {
+				roleRepository.save(Role.builder().name("SUPPLIER").build());
+			}
 			// Initialiser l'utilisateur admin
 			if (userRepository.findByEmail("admin@mail.fr").isEmpty()) {
 				User admin = new User();
