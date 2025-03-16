@@ -74,7 +74,7 @@ public class AuthenticationServiceTest {
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
-        doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
+        doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString(), anyMap());
 
         authenticationService.register(registerRequest,"USER");
 
