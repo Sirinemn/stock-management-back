@@ -73,6 +73,14 @@ public class StockMovementServiceTest {
         stockMovementService.addStockMovement(stockMovementDto);
 
         verify(stockMovementRepository, times(1)).save(any(StockMovement.class));
+        verify(stockAlertService, times(1)).checkStockLevel(any(Product.class));
+        verify(productService, times(1)).updateProduct(any(ProductDto.class));
+    }
+    @Test
+    public void getStockMovementsByProductTest() {
+        stockMovementService.getStockMovementsByProduct(1);
+
+        verify(stockMovementRepository, times(1)).findAllByProductId(1);
     }
 
 }
