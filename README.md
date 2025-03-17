@@ -61,10 +61,12 @@ Cette API permet la gestion des stocks de produits en entreprise. Elle inclut la
 | `POST`  | `/api/stock/movement`         | Ajouter un mouvement de stock  |
 | `GET`   | `/api/stock/movements/{productId}` | Lister les mouvements d'un produit |
 | `GET`   | `/api/stock/history`         | Historique des mouvements de stock (filtrage par utilisateur, produit et date) |
-
+### 📊 Dashboard
+| Méthode | URL                       | Description                     |
+|---------|---------------------------|---------------------------------|
+| `GET`   | `/api/dashboard/overview` |Récupérer l’état global des stocks|
 
 ## 🔥 Améliorations Futures
-- 📊 Tableau de bord pour suivre les stocks
 - 📱 Interface utilisateur (frontend)
 - 📦 Gestion des fournisseurs
 - 🏢 Gestion des Clients
