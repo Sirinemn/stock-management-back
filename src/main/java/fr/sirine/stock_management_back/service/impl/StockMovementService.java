@@ -8,6 +8,7 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.IProductService;
+import fr.sirine.stock_management_back.service.IStockMovementService;
 import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StockMovementService {
+public class StockMovementService implements IStockMovementService {
     private final StockMovementRepository stockMovementRepository;
     private final IProductService productService;
     private final IUserService userService;
