@@ -2,13 +2,11 @@ package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.dto.DashboardOverviewDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
-import fr.sirine.stock_management_back.mapper.StockMovementMapper;
 import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IStockMovementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DashboardService {
