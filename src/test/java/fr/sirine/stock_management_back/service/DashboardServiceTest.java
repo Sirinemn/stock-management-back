@@ -46,6 +46,6 @@ public class DashboardServiceTest {
         when(stockMovementService.findTop10ByOrderByDateDesc()).thenReturn(List.of(stockMovementDto));
         // Then
         DashboardOverviewDto result = dashboardService.getDashboardOverview();
-        assertEquals(result.getTotalProducts(), 1);
+        assertEquals(1, result.getTotalProducts());
     }
 }
