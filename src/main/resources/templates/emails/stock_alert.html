@@ -3,17 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Alerte Stock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        p {
+            margin: 0 0 10px;
+            line-height: 1.6;
+        }
+        strong {
+            color: #d9534f;
+        }
+    </style>
 </head>
 <body>
-<p>Bonjour <span th:text="${adminName}"></span>,</p>
+<div class="email-container">
+    <p>Bonjour <span th:text="${adminName}"></span>,</p>
 
-<p>Le produit "<span th:text="${productName}"></span>" est en stock faible !</p>
+    <p>Le produit "<span th:text="${productName}"></span>" est en stock faible !</p>
 
-<p>Quantité restante : <span th:text="${quantity}"></span></p>
+    <p><strong>Quantité restante :</strong> <span th:text="${quantity}"></span></p>
 
-<p>Merci de vérifier le stock au plus vite.</p>
+    <p>Merci de vérifier le stock au plus vite.</p>
 
-<p>Cordialement,</p>
-<p>L'équipe de gestion des stocks</p>
+    <p>Cordialement,</p>
+    <p>L'équipe de gestion des stocks</p>
+</div>
 </body>
 </html>
+
