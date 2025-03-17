@@ -65,12 +65,13 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
+        int passwordLength = request.getPassword().length();
+
         Map<String, Object> emailMessage = Map.of(
                 "firstname", user.getFirstname(),
                 "lastname", user.getLastname(),
                 "email", user.getEmail(),
-                "password", request.getPassword().substring(0, 3) + "****"
-        );
+                "password", request.getPassword().substring(0, 3) + "*".repeat(passwordLength - 3));
 
         emailService.sendEmail(user.getEmail(), "Inscription réussie","emails/registration" , emailMessage);
 
