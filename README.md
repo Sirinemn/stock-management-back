@@ -28,8 +28,8 @@ Cette API permet la gestion des stocks de produits en entreprise. Elle inclut la
 ### 🔧 Installation
 1. **Cloner le projet**
    ```bash
-   git clone https://github.com/ton-profil/nom-du-repo.git
-   cd nom-du-repo
+   git clone https://github.com/Sirinemn/stock-management-back.git
+   cd stock-management-back
    ```
 2. **Configurer la base de données**
    - Modifier `application.properties` avec tes identifiants PostgresSQL
@@ -39,8 +39,6 @@ Cette API permet la gestion des stocks de produits en entreprise. Elle inclut la
    mvn spring-boot:run
    ```
 
-4. **Tester avec Postman**
-   - Importer le fichier `postman_collection.json` fourni
 
 ## 🛠️ Endpoints Principaux
 ### 🔑 Authentification
