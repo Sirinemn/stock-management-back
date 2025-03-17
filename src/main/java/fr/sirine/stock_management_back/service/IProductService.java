@@ -8,5 +8,9 @@ public interface IProductService {
     Product findById(Integer id);
     void deleteProduct(Integer id);
     ProductDto updateProduct(ProductDto productDto);
+
+    long count();
+
+    long countByQuantityLessThan(int i);
 }
 
