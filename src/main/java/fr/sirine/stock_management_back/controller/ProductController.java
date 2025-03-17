@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/products")
 @Tag(name = "Product Management", description = "Operations related to product management")
@@ -40,6 +42,11 @@ public class ProductController {
     public ResponseEntity<ProductDto> getProductById(@PathVariable Integer id) {
         Product product = productService.findById(id);
         return ResponseEntity.ok(productMapper.toDto(product));
+    }
+    @Operation(summary = "Get all products", description = "Retrieve all products")
+    @GetMapping
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @Operation(summary = "Update a product", description = "Update a product's details")

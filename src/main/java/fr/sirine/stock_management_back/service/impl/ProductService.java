@@ -12,6 +12,8 @@ import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
@@ -62,5 +64,9 @@ public class ProductService implements IProductService {
 
         return productMapper.toDto(productRepository.save(product));
     }
-
+    public List<ProductDto> findAll() {
+        return productRepository.findAll().stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
 }
