@@ -90,5 +90,11 @@ public class StockMovementService implements IStockMovementService {
                 m.getDate())
         ).collect(Collectors.toList());
     }
+    public List<StockMovementDto> findTop10ByOrderByDateDesc() {
+        List<StockMovement> movements = stockMovementRepository.findTop10ByOrderByDateDesc();
+        return movements.stream()
+                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getUser().getId(), m.getType().toString(), m.getQuantity(), m.getDate()))
+                .collect(Collectors.toList());
+    }
 }
 
