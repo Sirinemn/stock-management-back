@@ -76,4 +76,13 @@ public class UserService implements IUserService {
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public void updateUserById(Integer id, UserDto userDto) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        user.setFirstname(userDto.getFirstname());
+        user.setLastname(userDto.getLastname());
+        user.setEmail(userDto.getEmail());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        userRepository.save(user);
+    }
 }
