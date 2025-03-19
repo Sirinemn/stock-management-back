@@ -29,6 +29,10 @@ public class UserService implements IUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public UserDto getById(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return userMapper.toDto(user);
+    }
     public User findById(Integer id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
