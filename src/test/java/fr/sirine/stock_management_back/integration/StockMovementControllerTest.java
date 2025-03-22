@@ -3,10 +3,7 @@ package fr.sirine.stock_management_back.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.entities.*;
-import fr.sirine.stock_management_back.repository.CategoryRepository;
-import fr.sirine.stock_management_back.repository.ProductRepository;
-import fr.sirine.stock_management_back.repository.StockMovementRepository;
-import fr.sirine.stock_management_back.repository.UserRepository;
+import fr.sirine.stock_management_back.repository.*;
 import fr.sirine.stock_management_back.service.impl.StockAlertService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +48,8 @@ class StockMovementControllerTest {
     private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
     private Product product;
     private User user;
@@ -60,9 +59,9 @@ class StockMovementControllerTest {
     @BeforeEach
     void setup() {
         group = Group.builder()
-                .id(1)
                 .name("group")
                 .build();
+        groupRepository.save(group);
         category = new Category();
         category.setName("Electronics");
         categoryRepository.save(category);
@@ -72,6 +71,7 @@ class StockMovementControllerTest {
         user.setPassword("password");
         user.setFirstname("John");
         user.setLastname("Doe");
+        user.setGroup(group);
         user.setDateOfBirth(LocalDateTime.now());
         userRepository.save(user);
 
@@ -80,6 +80,7 @@ class StockMovementControllerTest {
         product.setDescription("Powerful Laptop");
         product.setQuantity(10);
         product.setPrice(1200.0);
+        product.setGroup(group);
         product.setUser(user);
         product.setCategory(category);
         productRepository.save(product);
@@ -113,7 +114,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une sortie de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExit() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"ENTREE", 5, LocalDateTime.now(),1);
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 5, LocalDateTime.now(),1);
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -121,14 +122,14 @@ class StockMovementControllerTest {
                 .andExpect(status().isOk());
 
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(7, updatedProduct.getQuantity()); // 10 - 3 = 7
+        assertEquals(5, updatedProduct.getQuantity()); // 10 - 5 = 5
     }
 
     @Test
     @DisplayName("Ajout d'une sortie de stock insuffisante")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExitInsufficientStock() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"ENTREE", 5, LocalDateTime.now(),1);
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 12, LocalDateTime.now(),1);
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
