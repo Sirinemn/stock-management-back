@@ -100,10 +100,10 @@ public class UserServiceTest {
     }
     @Test
     void should_get_all_users() {
-        when(userRepository.findAll()).thenReturn(List.of(user));
+        when(userRepository.findByCreatedBy_Id(anyInt())).thenReturn(List.of(user));
         when(userMapper.toDto(any(User.class))).thenReturn(userDto);
         List<UserDto> result = userService.getUsersByAdmin(admin.getId());
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository, times(1)).findByCreatedBy_Id(2);
         assertEquals(1, result.size());
     }
 }
