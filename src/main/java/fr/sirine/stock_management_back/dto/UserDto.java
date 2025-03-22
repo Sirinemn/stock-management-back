@@ -19,4 +19,5 @@ public class UserDto {
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
     private List<String> roles;
+    private Integer createdById;
 }

@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 public interface UserMapper extends EntityMapper<UserDto, User> {
 
     @Mapping(target = "roles", qualifiedByName = "rolesToStringList")
+    @Mapping(target = "createdById", source = "createdBy.id")
     UserDto toDto(User user);
 
     @Mapping(target = "roles", qualifiedByName = "stringListToRoles")
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     User toEntity(UserDto userDto);
 
     @Named("rolesToStringList")
