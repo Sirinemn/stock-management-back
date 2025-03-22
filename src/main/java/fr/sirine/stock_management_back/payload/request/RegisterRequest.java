@@ -31,4 +31,7 @@ public class RegisterRequest {
     @NotNull(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String password;
+
+    @NotEmpty(message = "Group name is mandatory")
+    private String groupName;
 }
