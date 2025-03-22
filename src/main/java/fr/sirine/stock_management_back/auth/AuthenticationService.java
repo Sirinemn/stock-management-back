@@ -1,18 +1,21 @@
 package fr.sirine.stock_management_back.auth;
 
 import fr.sirine.stock_management_back.email.EmailService;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
+import fr.sirine.stock_management_back.exceptions.custom.GroupAlreadyExistException;
 import fr.sirine.stock_management_back.exceptions.custom.RoleNotFoundException;
 import fr.sirine.stock_management_back.jwt.JwtService;
 import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
-import fr.sirine.stock_management_back.payload.request.RegisterRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterUserRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
+import fr.sirine.stock_management_back.repository.GroupRepository;
 import fr.sirine.stock_management_back.repository.RoleRepository;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.repository.UserRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,18 +38,20 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
+    private final GroupRepository groupRepository;
 
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtService jwtService, PasswordEncoder passwordEncoder, EmailService emailService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtService jwtService, PasswordEncoder passwordEncoder, EmailService emailService, AuthenticationManager authenticationManager, GroupRepository groupRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
+        this.groupRepository = groupRepository;
     }
 
-    public User register(RegisterRequest request, String role, User admin) {
+    public User register(RegisterUserRequest request, String role, User admin) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
@@ -54,6 +60,7 @@ public class AuthenticationService {
         user.setEmail(request.getEmail());
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
+        user.setGroup(admin.getGroup());
         user.setPassword(passwordEncoder.encode(request.getPassword())); // Utiliser le mot de passe saisi par l'admin
         user.setRoles(List.of(roleRepository.findByName(role).orElseThrow(RoleNotFoundException::new)));
 
@@ -79,10 +86,19 @@ public class AuthenticationService {
 
         return user;
     }
-    public User registerAdmin(RegisterRequest request) {
+    public User registerAdmin(RegisterAdminRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
+
+        Optional<Group> existingGroup = groupRepository.findByName(request.getGroupName());
+        if (existingGroup.isPresent()) {
+            throw new GroupAlreadyExistException("Group name already taken");
+        }
+        // Création du groupe avec le nom fourni
+        Group group = new Group();
+        group.setName(request.getGroupName());
+        group = groupRepository.save(group);
 
         User admin = new User();
         admin.setEmail(request.getEmail());
@@ -92,6 +108,7 @@ public class AuthenticationService {
         admin.setRoles(List.of(roleRepository.findByName("ADMIN").orElseThrow(RoleNotFoundException::new)));
         admin.setFirstLogin(false); // Explicite pour les ADMINs
         admin.setCreatedBy(null); // Aucun utilisateur ne l'a créé
+        admin.setGroup(group);
 
         userRepository.save(admin);
 
