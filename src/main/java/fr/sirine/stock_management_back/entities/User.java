@@ -53,6 +53,9 @@ public class User implements UserDetails, Principal {
     @ManyToOne
     @JoinColumn(name = "created_by_id")
     private User createdBy;
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     @Override
     public String getName() {
