@@ -2,10 +2,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
-import fr.sirine.stock_management_back.entities.Category;
-import fr.sirine.stock_management_back.entities.Product;
-import fr.sirine.stock_management_back.entities.StockMovement;
-import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.entities.*;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.impl.StockAlertService;
 import fr.sirine.stock_management_back.service.impl.StockMovementService;
@@ -36,9 +33,14 @@ public class StockMovementServiceTest {
     Product product;
     User user;
     Category category;
+    Group group;
 
     @BeforeEach
     public void setUp() {
+        group = Group.builder()
+                .id(1)
+                .name("group")
+                .build();
         category = Category.builder()
                 .name("category")
                 .build();
@@ -84,7 +86,7 @@ public class StockMovementServiceTest {
     }
     @Test
     public void getStockMovementsTest() {
-        stockMovementService.getStockMovements(1, 1, null, null);
+        stockMovementService.getStockMovements(1, 1, 1, null, null);
 
         verify(stockMovementRepository, times(1)).findByUserId(1);
         verify(stockMovementRepository, times(0)).findAllByProductId(1);
