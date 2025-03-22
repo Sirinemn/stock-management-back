@@ -8,7 +8,7 @@ import java.util.List;
 public interface IUserService {
     User findById(Integer id);
     UserDto getById(Integer id);
-    List<UserDto> getAllUsers();
+    List<UserDto> getUsersByAdmin(Integer adminId);
     void updateUser(UserDto userDto, String password);
     void deleteUser(Integer id);
     void updateUserById(Integer id, UserDto userDto);

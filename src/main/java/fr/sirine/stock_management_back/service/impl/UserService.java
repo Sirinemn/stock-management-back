@@ -37,22 +37,11 @@ public class UserService implements IUserService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        System.out.println("Users found: " + users);
-        logger.info("Users found: " + users);
-
-        List<User> nonAdminUsers = users.stream()
-                .filter(user -> user.getRoles().stream().noneMatch(role -> role.getName().equals("ADMIN")))
-                .toList();
-        logger.info("Non-admin users: " + nonAdminUsers);
-
-        List<UserDto> userDtos = nonAdminUsers.stream()
+    public List<UserDto> getUsersByAdmin(Integer adminId) {
+        return userRepository.findByCreatedBy_Id(adminId)
+                .stream()
                 .map(userMapper::toDto)
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        logger.info("User DTOs: " + userDtos);
-        return userDtos;
     }
     public void updateUser( UserDto userDto, String password) {
         User initialUser = findById(userDto.getId());
