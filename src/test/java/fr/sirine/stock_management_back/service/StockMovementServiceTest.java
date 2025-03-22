@@ -28,6 +28,8 @@ public class StockMovementServiceTest {
     private IUserService userService;
     @Mock
     private StockAlertService stockAlertService;
+    @Mock
+    private IGroupService groupService;
 
     StockMovementDto stockMovementDto;
     Product product;
@@ -49,6 +51,7 @@ public class StockMovementServiceTest {
                 .lastname("user")
                 .password("password")
                 .email("email")
+                .group(group)
                 .build();
         product = Product.builder()
                 .name("product")
@@ -56,6 +59,7 @@ public class StockMovementServiceTest {
                 .price(100)
                 .user(user)
                 .category(category)
+                .group(group)
                 .description("description")
                 .build();
         stockMovementDto = StockMovementDto.builder()
@@ -63,10 +67,12 @@ public class StockMovementServiceTest {
                 .productId(1)
                 .quantity(5)
                 .type("ENTREE")
+                .groupId(group.getId())
                 .build();
     }
     @Test
     public void addStockMovementTest() {
+        when(groupService.findById(1)).thenReturn(group);
         when(productService.findById(1)).thenReturn(product);
         when(userService.findById(1)).thenReturn(user);
         when(productService.updateProduct(any(ProductDto.class))).thenReturn(new ProductDto());
@@ -82,7 +88,7 @@ public class StockMovementServiceTest {
     public void getStockMovementsByProductTest() {
         stockMovementService.getStockMovementsByProduct(1,1);
 
-        verify(stockMovementRepository, times(1)).findAllByProductId(1);
+        verify(stockMovementRepository, times(1)).findByProductIdAndGroupId(1,1);
     }
     @Test
     public void getStockMovementsTest() {
