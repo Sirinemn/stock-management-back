@@ -75,10 +75,10 @@ public class ProductService implements IProductService {
                 .map(productMapper::toDto)
                 .toList();
     }
-    public long count() {
+    public long countByGroupId(Integer groupId) {
         return productRepository.count();
     }
-    public long countByQuantityLessThan(int i) {
+    public long countByGroupIdAndQuantityLessThan(Integer groupId,int i) {
         return productRepository.countByQuantityLessThan(i);
     }
 }
