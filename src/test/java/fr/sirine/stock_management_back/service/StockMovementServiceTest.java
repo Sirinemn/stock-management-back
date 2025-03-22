@@ -80,7 +80,7 @@ public class StockMovementServiceTest {
     }
     @Test
     public void getStockMovementsByProductTest() {
-        stockMovementService.getStockMovementsByProduct(1);
+        stockMovementService.getStockMovementsByProduct(1,1);
 
         verify(stockMovementRepository, times(1)).findAllByProductId(1);
     }
