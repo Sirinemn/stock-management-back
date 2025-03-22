@@ -50,6 +50,9 @@ public class User implements UserDetails, Principal {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    private User createdBy;
 
     @Override
     public String getName() {
