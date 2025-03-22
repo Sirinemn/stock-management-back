@@ -26,5 +26,9 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     private List<StockMovement> stockMovements;
+
+    public Group(String name) {
+        this.name = name;
+    }
 }
 
