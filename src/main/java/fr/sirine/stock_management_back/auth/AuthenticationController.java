@@ -4,7 +4,8 @@ import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
-import fr.sirine.stock_management_back.payload.request.RegisterRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterUserRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,17 +48,17 @@ public class AuthenticationController {
 
     @Operation(summary = "Inscription administrateur", description = "Permet à un administrateur de s'inscrire en premier")
     @PostMapping("/register")
-    public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.registerAdmin(registerRequest);
+    public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterAdminRequest registerAdminRequest) {
+        authenticationService.registerAdmin(registerAdminRequest);
         return ResponseEntity.accepted().build();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
         User admin = authenticationService.getAuthenticatedUser(); // Récupération de l'admin connecté
-        authenticationService.register(registerRequest, "USER", admin);
+        authenticationService.register(registerUserRequest, "USER", admin);
         return ResponseEntity.accepted().build();
     }
 

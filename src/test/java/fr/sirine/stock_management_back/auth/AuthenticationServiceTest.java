@@ -6,7 +6,8 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
 import fr.sirine.stock_management_back.jwt.JwtService;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
-import fr.sirine.stock_management_back.payload.request.RegisterRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterUserRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
 import fr.sirine.stock_management_back.repository.RoleRepository;
 import fr.sirine.stock_management_back.repository.UserRepository;
@@ -48,7 +49,7 @@ public class AuthenticationServiceTest {
     @Mock
     private EmailService emailService;
 
-    private RegisterRequest registerRequest;
+    private RegisterUserRequest registerUserRequest;
     private LoginRequest loginRequest;
     private User user;
     private Role userRole;
@@ -56,7 +57,7 @@ public class AuthenticationServiceTest {
     private User admin;
     @BeforeEach
     void setUp() {
-        registerRequest = new RegisterRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123");
+        registerAdminRequest = new RegisterAdminRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123","group");
         loginRequest = new LoginRequest("john.doe@example.com", "password123");
 
         userRole = new Role( "USER");
@@ -81,13 +82,13 @@ public class AuthenticationServiceTest {
 
     @Test
     void should_register() {
-        when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByEmail(registerUserRequest.getEmail())).thenReturn(false);
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
-        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
+        when(passwordEncoder.encode(registerUserRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
         doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString(), anyMap());
 
-        authenticationService.register(registerRequest,"USER", admin);
+        authenticationService.register(registerUserRequest,"USER", admin);
 
         verify(userRepository, times(1)).save(any(User.class));
 
@@ -129,10 +130,10 @@ public class AuthenticationServiceTest {
     @Test
     void shouldThrowExceptionWhenEmailAlreadyUsed() {
         // Given
-        when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(true);
+        when(userRepository.existsByEmail(registerUserRequest.getEmail())).thenReturn(true);
 
         // When / Then
-        assertThatThrownBy(() -> authenticationService.register(registerRequest,"USER", admin))
+        assertThatThrownBy(() -> authenticationService.register(registerUserRequest,"USER", admin))
                 .isInstanceOf(EmailAlreadyUsedException.class);
     }
 

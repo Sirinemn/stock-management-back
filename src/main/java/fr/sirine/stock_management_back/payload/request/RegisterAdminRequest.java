@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-public class RegisterRequest {
+public class RegisterAdminRequest {
 
     @NotEmpty(message = "Firstname is mandatory")
     @NotNull(message = "Firstname is mandatory")

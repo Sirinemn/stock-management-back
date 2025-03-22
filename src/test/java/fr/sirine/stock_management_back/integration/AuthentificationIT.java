@@ -1,11 +1,10 @@
 package fr.sirine.stock_management_back.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.StockManagementBackApplication;
 import fr.sirine.stock_management_back.auth.AuthenticationService;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
-import fr.sirine.stock_management_back.payload.request.RegisterRequest;
+import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +42,14 @@ public class AuthentificationIT {
 
     @Test
     void souldRegisterSuccessfully() throws Exception {
-        RegisterRequest registerRequest = RegisterRequest.builder()
+        RegisterAdminRequest registerAdminRequest = RegisterAdminRequest.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .email("email@test.fr")
                 .dateOfBirth(LocalDateTime.now())
                 .password("password")
                 .build();
-        String registrationRequestJson = objectMapper.writeValueAsString(registerRequest);
+        String registrationRequestJson = objectMapper.writeValueAsString(registerAdminRequest);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registrationRequestJson);
@@ -59,14 +58,14 @@ public class AuthentificationIT {
     }
     @Test
     void shouldreturnBadRequestWhenRegisteringWithInvalidRequest() throws Exception {
-        RegisterRequest registerRequest = RegisterRequest.builder()
+        RegisterAdminRequest registerAdminRequest = RegisterAdminRequest.builder()
                 .firstname("firstname")
                 .lastname("lastname")
                 .email("email")
                 .dateOfBirth(LocalDateTime.now())
                 .password("password")
                 .build();
-        String registrationRequestJson = objectMapper.writeValueAsString(registerRequest);
+        String registrationRequestJson = objectMapper.writeValueAsString(registerAdminRequest);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registrationRequestJson);
