@@ -29,4 +29,8 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+
 }

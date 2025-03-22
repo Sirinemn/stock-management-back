@@ -33,6 +33,10 @@ public class StockMovement {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
     public enum TypeMovement {
         ENTREE, SORTIE
     }
