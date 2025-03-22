@@ -52,12 +52,15 @@ public class AuthenticationServiceTest {
     private LoginRequest loginRequest;
     private User user;
     private Role userRole;
+    private Role adminRole;
+    private User admin;
     @BeforeEach
     void setUp() {
         registerRequest = new RegisterRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123");
         loginRequest = new LoginRequest("john.doe@example.com", "password123");
 
         userRole = new Role( "USER");
+        adminRole = new Role("ADMIN");
         user = User.builder()
                 .id(1)
                 .firstname("John")
@@ -66,6 +69,14 @@ public class AuthenticationServiceTest {
                 .password("encodedPassword")
                 .roles(List.of(userRole))
                 .build();
+        admin = User.builder()
+                .id(2)
+                .firstname("admin")
+                .lastname("admin")
+                .email("admin@mail.fr")
+                .roles(List.of(adminRole))
+                .build();
+
     }
 
     @Test
@@ -76,7 +87,7 @@ public class AuthenticationServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString(), anyMap());
 
-        authenticationService.register(registerRequest,"USER");
+        authenticationService.register(registerRequest,"USER", admin);
 
         verify(userRepository, times(1)).save(any(User.class));
 
@@ -121,7 +132,7 @@ public class AuthenticationServiceTest {
         when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(true);
 
         // When / Then
-        assertThatThrownBy(() -> authenticationService.register(registerRequest,"USER"))
+        assertThatThrownBy(() -> authenticationService.register(registerRequest,"USER", admin))
                 .isInstanceOf(EmailAlreadyUsedException.class);
     }
 

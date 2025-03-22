@@ -37,12 +37,17 @@ public class UserServiceTest {
     private User user;
     private UserDto userDto;
     private Role role;
+    private User admin;
+    private Role adminRole;
 
     @BeforeEach
     void setUp() {
         role = Role.builder()
                 .id(1)
                 .name("USER")
+                .build();
+        adminRole = Role.builder()
+                .name("ADMIN")
                 .build();
         user = User.builder()
                 .id(1)
@@ -57,6 +62,12 @@ public class UserServiceTest {
                 .firstname("John")
                 .lastname("Doe")
                 .email("john@oefr")
+                .build();
+        admin = User.builder()
+                .id(2)
+                .roles(List.of(adminRole))
+                .firstname("admin")
+                .email("admin@mail.fr")
                 .build();
     }
     @Test
@@ -91,7 +102,7 @@ public class UserServiceTest {
     void should_get_all_users() {
         when(userRepository.findAll()).thenReturn(List.of(user));
         when(userMapper.toDto(any(User.class))).thenReturn(userDto);
-        List<UserDto> result = userService.getAllUsers();
+        List<UserDto> result = userService.getUsersByAdmin(admin.getId());
         verify(userRepository, times(1)).findAll();
         assertEquals(1, result.size());
     }

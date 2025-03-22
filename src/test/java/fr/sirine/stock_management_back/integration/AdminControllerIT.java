@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.integration;
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
@@ -45,9 +46,20 @@ public class AdminControllerIT {
     private UserDto userDto;
     private Category category;
     private CategoryDto categoryDto;
+    private User admin;
+    private Role adminRole;
 
     @BeforeEach
     void setUp() {
+        adminRole = Role.builder()
+                .name("ADMIN")
+                .build();
+        admin = User.builder()
+                .id(2)
+                .roles(List.of(adminRole))
+                .firstname("admin")
+                .email("admin@mail.fr")
+                .build();
         user = User.builder()
                 .id(1)
                 .firstname("firstname")
@@ -69,7 +81,7 @@ public class AdminControllerIT {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void shouldReturnAllUsers() throws Exception {
-        when(userService.getAllUsers()).thenReturn(List.of(userDto));
+        when(userService.getUsersByAdmin(admin.getId())).thenReturn(List.of(userDto));
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin");
         mockMvc.perform(request)
                 .andExpect(status().isOk());
