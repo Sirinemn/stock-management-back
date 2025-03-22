@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.ProductMapper;
@@ -33,10 +34,16 @@ public class ProductServiceTest {
 
     private Product product;
     private ProductDto productDto;
+    private Group group;
     @BeforeEach
     void setUp() {
+        group = Group.builder()
+                .id(1)
+                .name("group")
+                .build();
         product = Product.builder()
                 .id(1)
+                .group(group)
                 .name("product")
                 .price(10.0)
                 .quantity(10)
@@ -48,6 +55,7 @@ public class ProductServiceTest {
                 .quantity(10)
                 .categoryId(1)
                 .userId(2)
+                .groupId(group.getId())
                 .build();
     }
 
@@ -71,6 +79,7 @@ public class ProductServiceTest {
                 .password("password")
                 .lastname("lastname")
                 .firstname("firstname")
+                .group(group)
                 .build();
         Product mappedProduct = Product.builder()
                 .id(1)
