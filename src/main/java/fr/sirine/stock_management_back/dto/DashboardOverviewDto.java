@@ -15,4 +15,5 @@ public class DashboardOverviewDto {
     private long totalProducts;
     private long lowStockProducts;
     private List<StockMovementDto> recentMovements;
+    private Integer groupId;
 }

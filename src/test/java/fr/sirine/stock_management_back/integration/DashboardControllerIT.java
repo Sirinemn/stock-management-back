@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.dto.DashboardOverviewDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.service.impl.DashboardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,10 @@ public class DashboardControllerIT {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void getDashboardOverview() throws Exception {
+        Group group = Group.builder()
+                .id(1)
+                .name("group")
+                .build();
         StockMovementDto stockMovementDto = StockMovementDto.builder()
                 .productId(1)
                 .quantity(10)
@@ -44,7 +49,7 @@ public class DashboardControllerIT {
                 .totalProducts(10L)
                 .recentMovements(List.of(stockMovementDto))
                 .build();
-        when(dashboardService.getDashboardOverview()).thenReturn(dashboardOverviewDto);
+        when(dashboardService.getDashboardOverview(group.getId())).thenReturn(dashboardOverviewDto);
         MockHttpServletRequestBuilder request = get("/dashboard/overview")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dashboardOverviewDto));

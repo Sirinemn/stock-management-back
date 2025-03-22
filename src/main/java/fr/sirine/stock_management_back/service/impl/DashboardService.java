@@ -19,11 +19,11 @@ public class DashboardService {
         this.stockMovementService = stockMovementService;
     }
 
-    public DashboardOverviewDto getDashboardOverview() {
-        long totalProducts = productService.count();
-        long lowStockProducts = productService.countByQuantityLessThan(5);
-        List<StockMovementDto> recentMovements = stockMovementService.findTop10ByOrderByDateDesc();
+    public DashboardOverviewDto getDashboardOverview(Integer groupId) {
+        long totalProducts = productService.countByGroupId(groupId);
+        long lowStockProducts = productService.countByGroupIdAndQuantityLessThan(groupId, 5);
+        List<StockMovementDto> recentMovements = stockMovementService.findTop10ByGroupIdOrderByDateDesc(groupId);
 
-        return new DashboardOverviewDto(totalProducts, lowStockProducts, recentMovements);
+        return new DashboardOverviewDto(totalProducts, lowStockProducts, recentMovements, groupId);
     }
 }

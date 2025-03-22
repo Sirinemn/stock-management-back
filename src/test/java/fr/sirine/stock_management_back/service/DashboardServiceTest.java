@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.DashboardOverviewDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.service.impl.DashboardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +28,10 @@ public class DashboardServiceTest {
     @Test
     void shouldReturnDashboardOverview() {
         // Given
+        Group group = Group.builder()
+                .id(1)
+                .name("group")
+                .build();
         StockMovementDto stockMovementDto = StockMovementDto.builder()
                 .userId(1)
                 .productId(1)
@@ -41,11 +45,11 @@ public class DashboardServiceTest {
                 .recentMovements(List.of(stockMovementDto))
                 .build();
         // When
-        when(productService.count()).thenReturn(1L);
-        when(productService.countByQuantityLessThan(5)).thenReturn(1L);
-        when(stockMovementService.findTop10ByOrderByDateDesc()).thenReturn(List.of(stockMovementDto));
+        when(productService.countByGroupId(group.getId())).thenReturn(1L);
+        when(productService.countByGroupIdAndQuantityLessThan(group.getId(),5)).thenReturn(1L);
+        when(stockMovementService.findTop10ByGroupIdOrderByDateDesc(group.getId())).thenReturn(List.of(stockMovementDto));
         // Then
-        DashboardOverviewDto result = dashboardService.getDashboardOverview();
+        DashboardOverviewDto result = dashboardService.getDashboardOverview(group.getId());
         assertEquals(1, result.getTotalProducts());
     }
 }
