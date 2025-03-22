@@ -106,8 +106,8 @@ public class StockMovementService implements IStockMovementService {
                 m.getGroup().getId())
         ).collect(Collectors.toList());
     }
-    public List<StockMovementDto> findTop10ByOrderByDateDesc() {
-        List<StockMovement> movements = stockMovementRepository.findTop10ByOrderByDateDesc();
+    public List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId) {
+        List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByDateDesc(groupId);
         return movements.stream()
                 .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getUser().getId(), m.getType().toString(), m.getQuantity(), m.getDate(), m.getGroup().getId()))
                 .collect(Collectors.toList());
