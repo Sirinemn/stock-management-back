@@ -16,6 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +45,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public User register(RegisterRequest request, String role) {
+    public User register(RegisterRequest request, String role, User admin) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
@@ -62,6 +63,7 @@ public class AuthenticationService {
         } else {
         user.setFirstLogin(false); // Explicite pour les ADMINs
         }
+        user.setCreatedBy(admin);
 
         userRepository.save(user);
 
@@ -77,6 +79,25 @@ public class AuthenticationService {
 
         return user;
     }
+    public User registerAdmin(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyUsedException();
+        }
+
+        User admin = new User();
+        admin.setEmail(request.getEmail());
+        admin.setFirstname(request.getFirstname());
+        admin.setLastname(request.getLastname());
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setRoles(List.of(roleRepository.findByName("ADMIN").orElseThrow(RoleNotFoundException::new)));
+        admin.setFirstLogin(false); // Explicite pour les ADMINs
+        admin.setCreatedBy(null); // Aucun utilisateur ne l'a créé
+
+        userRepository.save(admin);
+
+        return admin;
+    }
+
 
     public AuthenticationResponse authenticate(LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
@@ -105,6 +126,10 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setFirstLogin(false); // Désactiver le mode "première connexion"
         userRepository.save(user);
+    }
+    public User getAuthenticatedUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
     }
 
 }

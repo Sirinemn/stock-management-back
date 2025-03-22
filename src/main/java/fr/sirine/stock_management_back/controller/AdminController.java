@@ -42,9 +42,9 @@ public class AdminController {
     @Operation(summary = "Get all users", description = "Retrieve a list of all users")
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers(@RequestParam("id") Integer id) {
         logger.info("Test Logger Info");
-        return userService.getAllUsers();
+        return userService.getUsersByAdmin(id);
     }
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID")
     @GetMapping("/users/{id}")

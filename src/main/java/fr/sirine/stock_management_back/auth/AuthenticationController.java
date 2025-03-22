@@ -48,7 +48,7 @@ public class AuthenticationController {
     @Operation(summary = "Inscription administrateur", description = "Permet à un administrateur de s'inscrire en premier")
     @PostMapping("/register")
     public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest, "ADMIN");  // Inscrit un ADMIN
+        authenticationService.registerAdmin(registerRequest);
         return ResponseEntity.accepted().build();
     }
 
@@ -56,7 +56,8 @@ public class AuthenticationController {
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest, "USER"); // Inscrit un USER
+        User admin = authenticationService.getAuthenticatedUser(); // Récupération de l'admin connecté
+        authenticationService.register(registerRequest, "USER", admin);
         return ResponseEntity.accepted().build();
     }
 
