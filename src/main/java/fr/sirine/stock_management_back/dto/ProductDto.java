@@ -19,6 +19,8 @@ public class ProductDto {
     private Integer userId;
     private Integer categoryId; // Utilisé pour les requêtes
     private String categoryName; // Utilisé pour l'affichage
+    private Integer groupId;   // Ajout du groupe
+    private String groupName;
 
     public ProductDto(Product product) {
         this.id = product.getId();
@@ -30,5 +32,7 @@ public class ProductDto {
         this.userId = product.getUser().getId();
         this.categoryId = product.getCategory().getId();
         this.categoryName = product.getCategory().getName();
+        this.groupId = product.getGroup().getId();
+        this.groupName = product.getGroup().getName();
     }
 }
