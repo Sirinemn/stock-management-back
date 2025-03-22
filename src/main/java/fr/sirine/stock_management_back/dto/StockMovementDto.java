@@ -16,4 +16,5 @@ public class StockMovementDto {
     private String type;
     private int quantity;
     private LocalDateTime date;
+    private Integer groupId;
 }
