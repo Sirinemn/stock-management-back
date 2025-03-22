@@ -32,12 +32,18 @@ public class ProductService implements IProductService {
     }
 
     public ProductDto createProduct(ProductDto productDto) {
+        Product product = productMapper.toEntity(productDto);
         Category category = categoryService.findById(productDto.getCategoryId());
         User user = userService.findById(productDto.getUserId());
+        if (user.getGroup() != null) {
+            product.setUser(user);
+        } else {
+            throw new RuntimeException("L'utilisateur doit appartenir à un groupe pour créer un produit.");
+        }
 
-        Product product = productMapper.toEntity(productDto);
         product.setCategory(category);
         product.setUser(user);
+        product.setGroup(user.getGroup());
 
         return productMapper.toDto(productRepository.save(product));
     }
