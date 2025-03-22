@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.auth;
 
 import fr.sirine.stock_management_back.email.EmailService;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
@@ -57,11 +58,21 @@ public class AuthenticationServiceTest {
     private User admin;
     @BeforeEach
     void setUp() {
-        registerAdminRequest = new RegisterAdminRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123","group");
+        Group group = new Group("group");
+        admin = User.builder()
+                .id(2)
+                .firstname("admin")
+                .lastname("admin")
+                .email("admin@mail.fr")
+                .roles(List.of(adminRole))
+                .group(group)
+                .build();
+        adminRole = new Role("ADMIN");
+
+        registerUserRequest = new RegisterUserRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123");
         loginRequest = new LoginRequest("john.doe@example.com", "password123");
 
         userRole = new Role( "USER");
-        adminRole = new Role("ADMIN");
         user = User.builder()
                 .id(1)
                 .firstname("John")
@@ -69,13 +80,6 @@ public class AuthenticationServiceTest {
                 .email("john.doe@example.com")
                 .password("encodedPassword")
                 .roles(List.of(userRole))
-                .build();
-        admin = User.builder()
-                .id(2)
-                .firstname("admin")
-                .lastname("admin")
-                .email("admin@mail.fr")
-                .roles(List.of(adminRole))
                 .build();
 
     }
