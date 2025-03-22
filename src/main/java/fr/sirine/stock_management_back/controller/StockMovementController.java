@@ -42,8 +42,8 @@ public class StockMovementController {
             @ApiResponse(responseCode = "404", description = "Produit non trouvé")
     })
     @GetMapping("/movements/{productId}")
-    public ResponseEntity<List<StockMovementDto>> getStockMovements(@PathVariable Integer productId) {
-        List<StockMovementDto> movements = stockMovementService.getStockMovementsByProduct(productId);
+    public ResponseEntity<List<StockMovementDto>> getStockMovements(@PathVariable Integer productId, @RequestParam(required = false) Integer groupId) {
+        List<StockMovementDto> movements = stockMovementService.getStockMovementsByProduct(productId, groupId);
         return ResponseEntity.ok(movements);
     }
     @Operation(summary = "Obtenir l'historique des mouvements de stock",
@@ -55,10 +55,11 @@ public class StockMovementController {
     public ResponseEntity<List<StockMovementDto>> getStockMovements(
             @RequestParam(required = false) Integer userId,
             @RequestParam(required = false) Integer productId,
+            @RequestParam(required = false) Integer groupId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
-        List<StockMovementDto> movements = stockMovementService.getStockMovements(userId, productId, startDate, endDate);
+        List<StockMovementDto> movements = stockMovementService.getStockMovements(userId, productId, groupId, startDate, endDate);
         return ResponseEntity.ok(movements);
     }
 }
