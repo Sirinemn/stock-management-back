@@ -59,6 +59,8 @@ public class AuthenticationServiceTest {
     @BeforeEach
     void setUp() {
         Group group = new Group("group");
+        adminRole = new Role("ADMIN");
+        userRole = new Role( "USER");
         admin = User.builder()
                 .id(2)
                 .firstname("admin")
@@ -67,12 +69,10 @@ public class AuthenticationServiceTest {
                 .roles(List.of(adminRole))
                 .group(group)
                 .build();
-        adminRole = new Role("ADMIN");
 
         registerUserRequest = new RegisterUserRequest("John", "Doe", LocalDateTime.now(), "john.doe@example.com", "password123");
         loginRequest = new LoginRequest("john.doe@example.com", "password123");
 
-        userRole = new Role( "USER");
         user = User.builder()
                 .id(1)
                 .firstname("John")
