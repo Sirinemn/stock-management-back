@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper(componentModel = "spring", imports = {User.class})
+@Mapper(componentModel = "spring", imports = {Product.class})
 public abstract class ProductMapper implements EntityMapper<ProductDto, Product> {
 
     @Autowired
@@ -28,13 +28,13 @@ public abstract class ProductMapper implements EntityMapper<ProductDto, Product>
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
-    @Mapping(source = "user.userGroup.id", target = "groupId")
-    @Mapping(source = "user.userGroup.name", target = "groupName")
+    @Mapping(source = "user.group.id", target = "groupId")
+    @Mapping(source = "user.group.name", target = "groupName")
     public abstract ProductDto toDto(Product product);
 
     @Mapping(source = "userId", target = "user", qualifiedByName = "findUserById")
     @Mapping(source = "categoryId", target = "category", qualifiedByName = "findCategoryById")
-    @Mapping(source = "groupId", target = "user.userGroup", qualifiedByName = "findGroupById")
+    @Mapping(source = "groupId", target = "group", qualifiedByName = "findGroupById")
     public abstract Product toEntity(ProductDto productDto);
 
     @Named("findUserById")
