@@ -1,7 +1,9 @@
 package fr.sirine.stock_management_back;
 
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.repository.GroupRepository;
 import fr.sirine.stock_management_back.repository.RoleRepository;
 import fr.sirine.stock_management_back.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +28,7 @@ public class StockManagementBackApplication {
 		return new BCryptPasswordEncoder();
 	}
 	@Bean
-	public CommandLineRunner runner(RoleRepository roleRepository, UserRepository userRepository) {
+	public CommandLineRunner runner(RoleRepository roleRepository, UserRepository userRepository, GroupRepository groupRepository) {
 		return args -> {
 			if (roleRepository.findByName("USER").isEmpty()) {
 				roleRepository.save(Role.builder().name("USER").build());
@@ -40,12 +42,16 @@ public class StockManagementBackApplication {
 			if (roleRepository.findByName("SUPPLIER").isEmpty()) {
 				roleRepository.save(Role.builder().name("SUPPLIER").build());
 			}
+			if (groupRepository.findByName("group").isEmpty()){
+				groupRepository.save(Group.builder().name("group").build());
+			}
 			// Initialiser l'utilisateur admin
 			if (userRepository.findByEmail("admin@mail.fr").isEmpty()) {
 				User admin = new User();
 				admin.setFirstname("admin");
 				admin.setEmail("admin@mail.fr");
 				admin.setLastname("Last");
+				admin.setGroup(groupRepository.findByName("group").orElseThrow(() -> new RuntimeException("Admin Group not found")));
 				admin.setPassword(passwordEncoder().encode("adminpassword"));
 				Role adminRole = roleRepository.findByName("ADMIN").orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
 				admin.setRoles(new ArrayList<>(Collections.singleton(adminRole)));
