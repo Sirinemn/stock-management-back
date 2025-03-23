@@ -134,6 +134,7 @@ public class AuthenticationService {
                 .userId(user.getId())
                 .token(jwtToken)
                 .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .groupId(user.getGroup().getId())
                 .build();
     }
     public void changePassword(ChangePasswordRequest request) {
