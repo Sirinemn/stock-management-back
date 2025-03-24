@@ -1,24 +1,33 @@
 package fr.sirine.stock_management_back.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
+import fr.sirine.stock_management_back.repository.CategoryRepository;
+import fr.sirine.stock_management_back.repository.GroupRepository;
+import fr.sirine.stock_management_back.repository.RoleRepository;
+import fr.sirine.stock_management_back.repository.UserRepository;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
 import fr.sirine.stock_management_back.service.impl.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,110 +38,141 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AdminControllerIT {
 
-    @MockitoBean
+    @Autowired
     private UserMapper userMapper;
-
-    @MockitoBean
+    @Autowired
     private UserService userService;
-    @MockitoBean
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
     private CategoryService categoryService;
-
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private GroupRepository groupRepository;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private User user;
     private UserDto userDto;
     private Category category;
-    private CategoryDto categoryDto;
+    private Group group;
     private User admin;
     private Role adminRole;
+    private Role userRole;
 
     @BeforeEach
     void setUp() {
-        adminRole = Role.builder()
-                .name("ADMIN")
+        adminRole = roleRepository.findByName("ADMIN")
+                .orElseGet(() -> {
+                    Role newRole = Role.builder()
+                            .name("ADMIN")
+                            .build();
+                    return roleRepository.save(newRole);
+                });
+        userRole = roleRepository.findByName("USER")
+                        .orElseGet(()-> {
+                            Role newRole = Role.builder()
+                                    .name("USER")
+                                    .build();
+                            return roleRepository.save(newRole);
+                        });
+        roleRepository.save(adminRole);
+        group = Group.builder()
+                .name("group")
                 .build();
+        groupRepository.save(group);
         admin = User.builder()
-                .id(2)
                 .roles(List.of(adminRole))
-                .firstname("admin")
-                .email("admin@mail.fr")
+                .group(group)
                 .build();
+        userRepository.save(admin);
         user = User.builder()
-                .id(1)
                 .firstname("firstname")
                 .lastname("lastname")
                 .email("john@doe.fr")
+                .group(group)
                 .password("password")
+                .createdBy(admin)
+                .roles(List.of(userRole))
                 .build();
+        userRepository.save(user);
         userDto = UserDto.builder()
-                .id(1)
                 .firstname("firstname")
                 .lastname("lastname")
                 .email("john@doe.fr")
                 .build();
         category = Category.builder()
-                .id(1)
                 .name("category")
+                .group(group)
                 .build();
+        categoryRepository.save(category);
+    }
+    @AfterEach
+    void cleanUp() {
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+        groupRepository.deleteAll();
+        roleRepository.deleteAll();
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldReturnAllUsers() throws Exception {
-        when(userService.getUsersByAdmin(admin.getId())).thenReturn(List.of(userDto));
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/users").param("id", String.valueOf(admin.getId()));
         mockMvc.perform(request)
                 .andExpect(status().isOk());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldReturnUserById() throws Exception {
-        when(userService.findById(1)).thenReturn(user);
-        when(userMapper.toDto(user)).thenReturn(userDto);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/1");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/users").param("id", String.valueOf(user.getId()));
         mockMvc.perform(request)
                 .andExpect(status().isOk());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldUpdateUser() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put("/admin/1")
-                .param("firstname", "updatedName")
-                .param("lastname", "updatedLastname")
-                .param("password", "newPassword")
-                .param("email", "updated@mail.fr");
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put("/admin/users/"+user.getId())
+                .content(userDtoJson)
+                .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
                 .andExpect(status().isOk());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldDeleteUser() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/1");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/users/"+user.getId());
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldDeleteCategory() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/categories/1");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/categories/"+category.getId());
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldReturnAllCategories() throws Exception {
-        when(categoryService.getAllCategories()).thenReturn(List.of(categoryDto));
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/categories");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/categories").param("userId", String.valueOf(admin.getId()));
         mockMvc.perform(request)
                 .andExpect(status().isOk());
     }
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void should_add_category() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/admin/categories")
-                .param("name", "newCategory");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/admin/category")
+                .param("name", "newCategory")
+                .param("userId", String.valueOf(admin.getId()));
         mockMvc.perform(request)
                 .andExpect(jsonPath("$.message").value("Category added with success!"))
                 .andExpect(status().isCreated());
