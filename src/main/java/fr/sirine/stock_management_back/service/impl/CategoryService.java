@@ -2,11 +2,13 @@ package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.CategoryAlreadyExistException;
 import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import fr.sirine.stock_management_back.service.ICategoryService;
+import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,21 +18,26 @@ public class CategoryService implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final IUserService userService;
 
-    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, IUserService userService) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
+        this.userService = userService;
     }
 
-    public List<CategoryDto> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories(Integer userId) {
+        User user = userService.findById(userId);
+        List<Category> categories = categoryRepository.findByGroup(user.getGroup());
         return categories.stream().map(categoryMapper::toDto).toList();
     }
-    public void addCategory(String categoryName) {
+    public void addCategory(String categoryName, Integer userId) {
+        User user = userService.findById(userId);
         if (categoryRepository.findByName(categoryName)!=null) {
             throw new CategoryAlreadyExistException();
         }else {
             Category category = new Category(categoryName);
+            category.setGroup(user.getGroup());
             categoryRepository.save(category);
         }
     }
