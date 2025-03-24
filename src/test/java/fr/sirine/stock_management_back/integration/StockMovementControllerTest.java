@@ -64,6 +64,7 @@ class StockMovementControllerTest {
         groupRepository.save(group);
         category = new Category();
         category.setName("Electronics");
+        category.setGroup(group);
         categoryRepository.save(category);
 
         user = new User();
@@ -92,13 +93,14 @@ class StockMovementControllerTest {
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         userRepository.deleteAll();
+        groupRepository.deleteAll();
     }
 
     @Test
     @DisplayName("Ajout d'une entrée de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementEntry() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"ENTREE", 5, LocalDateTime.now(),1);
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"ENTREE", 5, LocalDateTime.now(),group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -107,14 +109,14 @@ class StockMovementControllerTest {
                 .andExpect(jsonPath("$.message").value("Mouvement de stock ajouté avec succès"));
 
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(15, updatedProduct.getQuantity()); // 10 + 5 = 15
+        assertEquals(15, updatedProduct.getQuantity());
     }
 
     @Test
     @DisplayName("Ajout d'une sortie de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExit() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 5, LocalDateTime.now(),1);
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 5, LocalDateTime.now(), group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -122,14 +124,14 @@ class StockMovementControllerTest {
                 .andExpect(status().isOk());
 
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(5, updatedProduct.getQuantity()); // 10 - 5 = 5
+        assertEquals(5, updatedProduct.getQuantity());
     }
 
     @Test
     @DisplayName("Ajout d'une sortie de stock insuffisante")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExitInsufficientStock() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 12, LocalDateTime.now(),1);
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 12, LocalDateTime.now(),group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
