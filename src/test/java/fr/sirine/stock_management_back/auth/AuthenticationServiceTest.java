@@ -79,6 +79,7 @@ public class AuthenticationServiceTest {
                 .lastname("Doe")
                 .email("john.doe@example.com")
                 .password("encodedPassword")
+                .group(group)
                 .roles(List.of(userRole))
                 .build();
 
