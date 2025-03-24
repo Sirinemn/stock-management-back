@@ -7,6 +7,7 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
+import fr.sirine.stock_management_back.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,8 @@ public class CategoryServiceTest {
     private CategoryMapper categoryMapper;
     @InjectMocks
     private CategoryService categoryService;
+    @Mock
+    private UserService userService;
 
     private Category category;
     private CategoryDto categoryDto;
@@ -46,21 +49,25 @@ public class CategoryServiceTest {
         category = Category.builder()
                 .id(1)
                 .name("category")
+                .group(group)
                 .build();
         categoryDto = CategoryDto.builder()
                 .id(1)
                 .name("category")
+                .groupId(group.getId())
                 .build();
     }
     @Test
     void should_get_all_categories() {
-        when(categoryRepository.findAll()).thenReturn(List.of(category));
+        when(userService.findById(anyInt())).thenReturn(user);
+        when(categoryRepository.findByGroup(any(Group.class))).thenReturn(List.of(category));
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
         categoryService.getAllCategories(user.getId());
-        verify(categoryRepository, times(1)).findAll();
+        verify(categoryRepository, times(1)).findByGroup(any(Group.class));
     }
     @Test
     void should_add_category() {
+        when(userService.findById(anyInt())).thenReturn(user);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
         categoryService.addCategory("category", user.getId());
         verify(categoryRepository, times(1)).save(any(Category.class));
