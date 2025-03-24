@@ -28,6 +28,9 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<StockMovement> stockMovements;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> categories;
+
     public Group(String name) {
         this.name = name;
     }
