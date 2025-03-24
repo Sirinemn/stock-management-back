@@ -2,6 +2,8 @@ package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.entities.Category;
+import fr.sirine.stock_management_back.entities.Group;
+import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.CategoryMapper;
 import fr.sirine.stock_management_back.repository.CategoryRepository;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
@@ -27,9 +29,20 @@ public class CategoryServiceTest {
 
     private Category category;
     private CategoryDto categoryDto;
+    private User user;
+    private Group group;
 
     @BeforeEach
     void setUp() {
+        group = Group.builder()
+                .name("group")
+                .build();
+        user = User.builder()
+                .id(1)
+                .firstname("john")
+                .lastname("Doe")
+                .group(group)
+                .build();
         category = Category.builder()
                 .id(1)
                 .name("category")
@@ -43,13 +56,13 @@ public class CategoryServiceTest {
     void should_get_all_categories() {
         when(categoryRepository.findAll()).thenReturn(List.of(category));
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
-        categoryService.getAllCategories();
+        categoryService.getAllCategories(user.getId());
         verify(categoryRepository, times(1)).findAll();
     }
     @Test
     void should_add_category() {
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
-        categoryService.addCategory("category");
+        categoryService.addCategory("category", user.getId());
         verify(categoryRepository, times(1)).save(any(Category.class));
     }
     @Test
