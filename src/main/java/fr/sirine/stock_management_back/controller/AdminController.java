@@ -57,11 +57,10 @@ public class AdminController {
     @Operation(summary = "Update user", description = "Update a user's details by their ID")
     @PutMapping("/users/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<MessageResponse> updateUser(
-                                                      @RequestBody @Valid UserDto userDto,
-                                                      @RequestParam("password") @NotBlank @Size(max = 63) String password
+    public ResponseEntity<MessageResponse> updateUser(@PathVariable String id,
+                                                      @RequestBody @Valid UserDto userDto
                                                       ) {
-        userService.updateUser(userDto, password);
+        userService.updateUserById(Integer.parseInt(id), userDto);
         MessageResponse messageResponse = new MessageResponse("Updated with success!");
         return new ResponseEntity<>( messageResponse, HttpStatus.OK);
     }
@@ -81,15 +80,15 @@ public class AdminController {
     }
     @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        List<CategoryDto> categories = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam("userId") @Valid Integer userId) {
+        List<CategoryDto> categories = categoryService.getAllCategories(userId);
         return ResponseEntity.ok(categories);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
     @PostMapping("/category")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<MessageResponse> addCategory(@RequestParam("name") @NotBlank @Size(max = 63) String name) {
-        categoryService.addCategory(name);
+    public ResponseEntity<MessageResponse> addCategory(@RequestParam("name") @NotBlank @Size(max = 63) String name, @RequestParam("userId") @Valid Integer userId) {
+        categoryService.addCategory(name, userId);
         MessageResponse messageResponse = new MessageResponse("Category added with success!");
         return new ResponseEntity<>( messageResponse, HttpStatus.CREATED);
     }
