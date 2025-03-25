@@ -2,6 +2,8 @@ version: '3.8'
 
 services:
   db:
+    env_file:
+      - .env
     image: postgres:15
     container_name: stockmanagement-db
     restart: always
@@ -17,6 +19,8 @@ services:
       - backend-network
 
   app:
+    env_file:
+      - .env
     build: .
     container_name: stockmanagement-app
     restart: always
