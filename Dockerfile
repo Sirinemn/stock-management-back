@@ -11,8 +11,8 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Exposer le port 8081
-EXPOSE 8081
+# Exposer le port 8001
+EXPOSE 8001
 
 # Démarrage de l'application avec le profil production
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
