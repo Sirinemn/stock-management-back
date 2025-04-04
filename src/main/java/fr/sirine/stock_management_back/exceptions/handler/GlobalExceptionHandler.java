@@ -28,7 +28,11 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
-
+    @ExceptionHandler(GroupAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handleException(GroupAlreadyExistException exp) {
+        logger.error("Group already exist", exp);
+        return buildResponseEntity(BusinessErrorCodes.GROUP_ALREADY_EXIST, exp.getMessage());
+    }
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<ExceptionResponse> handleException(EmailAlreadyUsedException exp) {
         logger.error("Email already used", exp);
