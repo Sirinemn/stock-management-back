@@ -16,6 +16,7 @@ import fr.sirine.stock_management_back.repository.GroupRepository;
 import fr.sirine.stock_management_back.repository.RoleRepository;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
+    @Value("${app.url.login}")
+    private String loginUrl;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final JwtService jwtService;
@@ -111,6 +114,12 @@ public class AuthenticationService {
         admin.setGroup(group);
 
         userRepository.save(admin);
+        Map<String, Object> emailMessage = Map.of(
+                "firstname", admin.getFirstname(),
+                "lastname", admin.getLastname(),
+                "loginurl", loginUrl
+                );
+        emailService.sendEmail(admin.getEmail(), "Inscription réussie","emails/registration_admin" , emailMessage);
 
         return admin;
     }

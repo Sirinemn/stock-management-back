@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription réussie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .cta {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .cta:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <h1>Bienvenue sur l'application de gestion des stocks !</h1>
+    <p>Bonjour <strong><span th:text="${firstname}"></span> <span th:text="${lastname}"></span></strong>,</p>
+    <p>Nous sommes heureux de vous informer que votre inscription a été réalisée avec succès.</p>
+    <p>Vous pouvez maintenant commencer à gérer vos produits ou ajouter des utilisateurs pour vous aider dans la gestion.</p>
+    <p>Pour vous connecter, cliquez sur le bouton ci-dessous :</p>
+    <a href="${loginurl}" class="cta">Se connecter</a>
+    <p>Cordialement,<br>L'équipe de gestion des stocks</p>
+</div>
+</body>
+</html>
