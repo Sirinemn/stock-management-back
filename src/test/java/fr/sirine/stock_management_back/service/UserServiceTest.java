@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.UserDto;
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.mapper.UserMapper;
@@ -30,6 +31,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    private UserMapper userMapperSpy;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -39,9 +42,14 @@ public class UserServiceTest {
     private Role role;
     private User admin;
     private Role adminRole;
+    private Group group;
 
     @BeforeEach
     void setUp() {
+        group = Group.builder()
+                .id(1)
+                .name("group")
+                .build();
         role = Role.builder()
                 .id(1)
                 .name("USER")
@@ -56,12 +64,15 @@ public class UserServiceTest {
                 .password("password")
                 .email("john@oefr")
                 .roles(List.of(role))
+                .group(group)
                 .build();
         userDto = UserDto.builder()
                 .id(1)
                 .firstname("John")
                 .lastname("Doe")
                 .email("john@oefr")
+                .groupId(1)
+                .groupName("group")
                 .build();
         admin = User.builder()
                 .id(2)
@@ -69,6 +80,12 @@ public class UserServiceTest {
                 .firstname("admin")
                 .email("admin@mail.fr")
                 .build();
+    }
+    @Test
+    void should_map_user_to_dto() {
+        when(userMapper.toDto(user)).thenReturn(userDto);
+        UserDto result = userMapper.toDto(user);
+        assertEquals(user.getId(), result.getId());
     }
     @Test
     void should_find_user_by_id() {
