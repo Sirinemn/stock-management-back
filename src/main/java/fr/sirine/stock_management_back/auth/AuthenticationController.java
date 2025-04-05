@@ -1,5 +1,6 @@
 package fr.sirine.stock_management_back.auth;
 
+import fr.sirine.stock_management_back.dto.UserDto;
 import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
@@ -7,6 +8,7 @@ import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterUserRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
+import fr.sirine.stock_management_back.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,10 +28,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    public AuthenticationController(AuthenticationService authenticationService, EmailService emailService) {
+    public AuthenticationController(AuthenticationService authenticationService, EmailService emailService, UserService userService) {
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @Operation(summary = "Authentification utilisateur", description = "Permet à un utilisateur de se connecter avec ses identifiants")
@@ -63,10 +67,23 @@ public class AuthenticationController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Changement de mot de passe", description = "Permet à un utilisateur de changer son mot de passe")
     @PatchMapping("/users/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
         authenticationService.changePassword(request);
         return ResponseEntity.ok("Mot de passe mis à jour avec succès");
+    }
+    @GetMapping("/{id}")
+    @Operation(summary = "Récupérer les informations de l'utilisateur", description = "Récupérer les informations de l'utilisateur connecté")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Informations de l'utilisateur récupérées avec succès",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AuthenticationResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    })
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable Integer id) {
+        UserDto userDto = userService.getById(id);
+        return ResponseEntity.ok(userDto);
     }
 
 }
