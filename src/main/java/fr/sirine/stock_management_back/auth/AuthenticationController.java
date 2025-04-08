@@ -51,6 +51,11 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Inscription administrateur", description = "Permet à un administrateur de s'inscrire en premier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Inscription réussie"),
+            @ApiResponse(responseCode = "400", description = "Requête invalide"),
+            @ApiResponse(responseCode = "409", description = "Conflit : l'email est déjà utilisé")
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterAdminRequest registerAdminRequest) {
         authenticationService.registerAdmin(registerAdminRequest);
@@ -76,13 +81,23 @@ public class AuthenticationController {
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer les informations de l'utilisateur", description = "Récupérer les informations de l'utilisateur connecté")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Informations de l'utilisateur récupérées avec succès",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AuthenticationResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Informations de l'utilisateur récupérées avec succès", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))),
             @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
     })
     public ResponseEntity<UserDto> getUserInfo(@PathVariable Integer id) {
         UserDto userDto = userService.getById(id);
+        return ResponseEntity.ok(userDto);
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
+    @Operation(summary = "Récupérer les informations de l'utilisateur connecté", description = "Récupérer les informations de l'utilisateur connecté")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Informations de l'utilisateur récupérées avec succès", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+    })
+    public ResponseEntity<UserDto> getCurrentUserInfo() {
+        User user = authenticationService.getAuthenticatedUser();
+        UserDto userDto = userService.getById(user.getId());
         return ResponseEntity.ok(userDto);
     }
 
