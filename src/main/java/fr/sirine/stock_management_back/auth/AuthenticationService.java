@@ -6,6 +6,7 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
 import fr.sirine.stock_management_back.exceptions.custom.GroupAlreadyExistException;
 import fr.sirine.stock_management_back.exceptions.custom.RoleNotFoundException;
+import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
 import fr.sirine.stock_management_back.jwt.JwtService;
 import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
@@ -22,7 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -135,7 +135,7 @@ public class AuthenticationService {
 
         String userEmail = ((UserDetails) auth.getPrincipal()).getUsername();
         var user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException(userEmail));
+                .orElseThrow(UserNotFoundException::new);
 
         var jwtToken = jwtService.generateToken(user);
 
@@ -148,7 +148,7 @@ public class AuthenticationService {
     }
     public void changePassword(ChangePasswordRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+                .orElseThrow(UserNotFoundException::new);
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setFirstLogin(false); // Désactiver le mode "première connexion"
@@ -156,7 +156,7 @@ public class AuthenticationService {
     }
     public User getAuthenticatedUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 
 }
