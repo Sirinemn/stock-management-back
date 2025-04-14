@@ -8,6 +8,7 @@ import fr.sirine.stock_management_back.payload.request.LoginRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterAdminRequest;
 import fr.sirine.stock_management_back.payload.request.RegisterUserRequest;
 import fr.sirine.stock_management_back.payload.response.AuthenticationResponse;
+import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,18 +58,20 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "409", description = "Conflit : l'email est déjà utilisé")
     })
     @PostMapping("/register")
-    public ResponseEntity<?> registerAdmin(@RequestBody @Valid RegisterAdminRequest registerAdminRequest) {
+    public ResponseEntity<MessageResponse> registerAdmin(@RequestBody @Valid RegisterAdminRequest registerAdminRequest) {
         authenticationService.registerAdmin(registerAdminRequest);
-        return ResponseEntity.accepted().build();
+        MessageResponse messageResponse = new MessageResponse("Inscription réussie");
+        return ResponseEntity.ok(messageResponse);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Ajout d'un utilisateur par l'admin", description = "L'admin peut ajouter des utilisateurs")
     @PostMapping("/register/user")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<MessageResponse> registerUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
         User admin = authenticationService.getAuthenticatedUser(); // Récupération de l'admin connecté
         authenticationService.register(registerUserRequest, "USER", admin);
-        return ResponseEntity.accepted().build();
+        MessageResponse messageResponse = new MessageResponse("Inscription réussie");
+        return ResponseEntity.ok(messageResponse);
     }
 
     @PreAuthorize("isAuthenticated()")
