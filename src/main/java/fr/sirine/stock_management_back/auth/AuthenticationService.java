@@ -107,6 +107,7 @@ public class AuthenticationService {
         admin.setEmail(request.getEmail());
         admin.setFirstname(request.getFirstname());
         admin.setLastname(request.getLastname());
+        admin.setDateOfBirth(request.getDateOfBirth());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
         admin.setRoles(List.of(roleRepository.findByName("ADMIN").orElseThrow(RoleNotFoundException::new)));
         admin.setFirstLogin(false); // Explicite pour les ADMINs
