@@ -33,10 +33,6 @@ public class UserController {
         userService.updateUserById(id, userDto );
         return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
     }
-    @Operation(summary = "Get all users by admin id", description = "Get all users by admin id")
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> getUsersByAdmin(@RequestParam Integer adminId) {
-        return ResponseEntity.ok(userService.getUsersByAdmin(adminId));
-    }
+
 }
 
