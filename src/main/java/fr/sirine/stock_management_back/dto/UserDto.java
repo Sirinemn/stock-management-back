@@ -18,6 +18,7 @@ public class UserDto {
     private String email;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+    private boolean firstLogin;
     private List<String> roles;
     private Integer groupId;
     private String groupName;
