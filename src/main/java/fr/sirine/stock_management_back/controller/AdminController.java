@@ -47,7 +47,7 @@ public class AdminController {
         return userService.getUsersByAdmin(id);
     }
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID")
-    @GetMapping("/users/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> getUser(@PathVariable String id) throws IOException {
 
