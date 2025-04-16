@@ -64,6 +64,7 @@ public class AuthenticationService {
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
         user.setGroup(admin.getGroup());
+        user.setDateOfBirth(request.getDateOfBirth());
         user.setPassword(passwordEncoder.encode(request.getPassword())); // Utiliser le mot de passe saisi par l'admin
         user.setRoles(List.of(roleRepository.findByName(role).orElseThrow(RoleNotFoundException::new)));
 
