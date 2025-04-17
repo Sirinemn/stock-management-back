@@ -24,6 +24,7 @@ public abstract class UserMapper implements EntityMapper<UserDto, User> {
     @Mapping(target = "createdById", source = "createdBy.id")
     @Mapping(target = "groupId", source = "group.id")
     @Mapping(target = "groupName", source = "group.name")
+    @Mapping(source = "firstLogin", target = "firstLogin")
     public abstract UserDto toDto(User user);
 
     @Mapping(target = "roles", qualifiedByName = "stringListToRoles")
