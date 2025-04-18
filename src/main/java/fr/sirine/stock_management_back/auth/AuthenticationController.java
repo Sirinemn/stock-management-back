@@ -77,9 +77,10 @@ public class AuthenticationController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Changement de mot de passe", description = "Permet à un utilisateur de changer son mot de passe")
     @PatchMapping("/users/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         authenticationService.changePassword(request);
-        return ResponseEntity.ok("Mot de passe mis à jour avec succès");
+        MessageResponse messageResponse = new MessageResponse("Mot de passe changé avec succès");
+        return ResponseEntity.ok(messageResponse);
     }
     @GetMapping("/{id}")
     @Operation(summary = "Récupérer les informations de l'utilisateur", description = "Récupérer les informations de l'utilisateur connecté")
