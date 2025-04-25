@@ -30,6 +30,7 @@ public abstract class ProductMapper implements EntityMapper<ProductDto, Product>
     @Mapping(source = "category.name", target = "categoryName")
     @Mapping(source = "user.group.id", target = "groupId")
     @Mapping(source = "user.group.name", target = "groupName")
+    @Mapping(source = "user.getFullName", target = "userName")
     public abstract ProductDto toDto(Product product);
 
     @Mapping(source = "userId", target = "user", qualifiedByName = "findUserById")

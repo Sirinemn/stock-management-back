@@ -17,6 +17,7 @@ public class ProductDto {
     private double price;
     private int threshold;
     private Integer userId;
+    private String userName; // Utilisé pour l'affichage
     private Integer categoryId; // Utilisé pour les requêtes
     private String categoryName; // Utilisé pour l'affichage
     private Integer groupId;   // Ajout du groupe
