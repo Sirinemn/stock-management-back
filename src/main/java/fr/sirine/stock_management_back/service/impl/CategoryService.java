@@ -26,9 +26,8 @@ public class CategoryService implements ICategoryService {
         this.userService = userService;
     }
 
-    public List<CategoryDto> getAllCategories(Integer userId) {
-        User user = userService.findById(userId);
-        List<Category> categories = categoryRepository.findByGroup(user.getGroup());
+    public List<CategoryDto> getAllCategories(Integer groupId) {
+        List<Category> categories = categoryRepository.findByGroupId(groupId);
         return categories.stream().map(categoryMapper::toDto).toList();
     }
     public void addCategory(String categoryName, Integer userId) {
