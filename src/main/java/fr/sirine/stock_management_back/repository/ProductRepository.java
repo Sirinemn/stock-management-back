@@ -11,4 +11,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findByUserId(Long userId);
 
     long countByQuantityLessThan(int i);
+
+    List<Product> findAllByGroupId(Integer groupId);
 }
