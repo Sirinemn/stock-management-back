@@ -45,8 +45,8 @@ public class ProductController {
     }
     @Operation(summary = "Get all products", description = "Retrieve all products")
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam("groupId") Integer groupId) {
+        return ResponseEntity.ok(productService.findAllByGroupId(groupId));
     }
 
     @Operation(summary = "Update a product", description = "Update a product's details")
