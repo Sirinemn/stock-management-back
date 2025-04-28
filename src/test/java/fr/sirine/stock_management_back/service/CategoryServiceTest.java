@@ -59,11 +59,10 @@ public class CategoryServiceTest {
     }
     @Test
     void should_get_all_categories() {
-        when(userService.findById(anyInt())).thenReturn(user);
-        when(categoryRepository.findByGroup(any(Group.class))).thenReturn(List.of(category));
+        when(categoryRepository.findByGroupId(any(Integer.class))).thenReturn(List.of(category));
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
         categoryService.getAllCategories(user.getId());
-        verify(categoryRepository, times(1)).findByGroup(any(Group.class));
+        verify(categoryRepository, times(1)).findByGroupId(any(Integer.class));
     }
     @Test
     void should_add_category() {
