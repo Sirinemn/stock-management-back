@@ -75,6 +75,11 @@ public class ProductService implements IProductService {
                 .map(productMapper::toDto)
                 .toList();
     }
+    public List<ProductDto> findAllByGroupId(Integer groupId) {
+        return productRepository.findAllByGroupId(groupId).stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
     public long countByGroupId(Integer groupId) {
         return productRepository.count();
     }
