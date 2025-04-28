@@ -80,8 +80,8 @@ public class AdminController {
     }
     @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam("userId") @Valid Integer userId) {
-        List<CategoryDto> categories = categoryService.getAllCategories(userId);
+    public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam("groupId") @Valid Integer groupId) {
+        List<CategoryDto> categories = categoryService.getAllCategories(groupId);
         return ResponseEntity.ok(categories);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
