@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Category findByName(String name);
-    List<Category> findByGroup(Group group);
+    List<Category> findByGroupId(Integer groupId);
 }
