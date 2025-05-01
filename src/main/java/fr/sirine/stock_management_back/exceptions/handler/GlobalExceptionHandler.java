@@ -58,6 +58,11 @@ public class GlobalExceptionHandler {
         logger.error("Product Not found", exp);
         return buildResponseEntity(BusinessErrorCodes.PRODUCT_NOT_FOUND, exp.getMessage());
     }
+    @ExceptionHandler(ProductAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ProductAlreadyExistException exp) {
+        logger.error("Product name already exist", exp);
+        return buildResponseEntity(BusinessErrorCodes.PRODUCT_ALREADY_EXIST, exp.getMessage());
+    }
     @ExceptionHandler(InsufficientStockException.class)
     public ResponseEntity<ExceptionResponse> handleException(InsufficientStockException exp) {
         logger.error("Insufficient stock", exp);
