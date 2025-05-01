@@ -4,6 +4,7 @@ import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.exceptions.custom.ProductAlreadyExistException;
 import fr.sirine.stock_management_back.exceptions.custom.ProductNotFoundException;
 import fr.sirine.stock_management_back.mapper.ProductMapper;
 import fr.sirine.stock_management_back.repository.ProductRepository;
@@ -34,11 +35,14 @@ public class ProductService implements IProductService {
     public ProductDto createProduct(ProductDto productDto) {
         Product product = productMapper.toEntity(productDto);
         Category category = categoryService.findById(productDto.getCategoryId());
+        Integer groupId = productDto.getGroupId();
         User user = userService.findById(productDto.getUserId());
-        if (user.getGroup() != null) {
-            product.setUser(user);
-        } else {
+
+        if (user.getGroup() == null) {
             throw new RuntimeException("L'utilisateur doit appartenir à un groupe pour créer un produit.");
+        }
+        if (productRepository.findByNameAndGroupId(productDto.getName(), groupId).isPresent()) {
+            throw new ProductAlreadyExistException("Nom du produit déja utilisé");
         }
 
         product.setCategory(category);
@@ -57,6 +61,12 @@ public class ProductService implements IProductService {
     public ProductDto updateProduct(ProductDto productDto) {
         Product product = productRepository.findById(productDto.getId())
                 .orElseThrow(ProductNotFoundException::new);
+        Integer groupId = productDto.getGroupId();
+        if (productRepository.findByNameAndGroupId(productDto.getName(), groupId)
+                .filter(existingProduct -> !existingProduct.getId().equals(productDto.getId()))
+                .isPresent()) {
+            throw new ProductAlreadyExistException("Nom du produit déjà utilisé.");
+        }
 
         // 🔹 Met à jour les champs
         product.setName(productDto.getName());
