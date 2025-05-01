@@ -22,7 +22,8 @@ public enum BusinessErrorCodes {
     EMAIL_SERVICE_ERROR(1012, "Erreur du service d'email", HttpStatus.INTERNAL_SERVER_ERROR),
     GROUP_ALREADY_EXIST(1013, "Groupe déjà utilisé", HttpStatus.CONFLICT),
     GROUP_NOT_FOUND(1014, "Groupe non trouvé", HttpStatus.NOT_FOUND),
-    INTERNAL_SERVER_ERROR(1015, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
+    PRODUCT_ALREADY_EXIST(1015, "Nom du produit déja utilisé", HttpStatus.CONFLICT),
+    INTERNAL_SERVER_ERROR(1016, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
     private final int code;
