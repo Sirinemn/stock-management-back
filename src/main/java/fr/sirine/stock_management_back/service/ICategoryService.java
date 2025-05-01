@@ -10,6 +10,5 @@ public interface ICategoryService {
     void addCategory(String categoryName, Integer userId);
     void deleteCategory(Integer id);
     Category findById(Integer categoryId);
-    CategoryDto getByName(String name);
 }
 

@@ -48,4 +48,5 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
     }
+
 }

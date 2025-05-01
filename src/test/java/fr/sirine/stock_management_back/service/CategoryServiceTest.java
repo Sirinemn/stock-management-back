@@ -88,7 +88,7 @@ public class CategoryServiceTest {
     void should_find_category_by_name() {
         when(categoryRepository.findByNameAndGroupId("category", group.getId())).thenReturn(Optional.ofNullable(category));
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
-        categoryService.getByName("category");
+        categoryService.getByName("category", group.getId());
         verify(categoryRepository, times(1)).findByNameAndGroupId("category", group.getId());
     }
 }
