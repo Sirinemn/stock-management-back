@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -38,6 +39,7 @@ public class CategoryServiceTest {
     @BeforeEach
     void setUp() {
         group = Group.builder()
+                .id(1)
                 .name("group")
                 .build();
         user = User.builder()
@@ -84,9 +86,9 @@ public class CategoryServiceTest {
     }
     @Test
     void should_find_category_by_name() {
-        when(categoryRepository.findByName("category")).thenReturn(category);
+        when(categoryRepository.findByNameAndGroupId("category", group.getId())).thenReturn(Optional.ofNullable(category));
         when(categoryMapper.toDto(category)).thenReturn(categoryDto);
         categoryService.getByName("category");
-        verify(categoryRepository, times(1)).findByName("category");
+        verify(categoryRepository, times(1)).findByNameAndGroupId("category", group.getId());
     }
 }

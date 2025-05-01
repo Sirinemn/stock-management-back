@@ -32,7 +32,7 @@ public class CategoryService implements ICategoryService {
     }
     public void addCategory(String categoryName, Integer userId) {
         User user = userService.findById(userId);
-        if (categoryRepository.findByName(categoryName)!=null) {
+        if (categoryRepository.findByNameAndGroupId(categoryName, user.getGroup().getId()).isPresent()) {
             throw new CategoryAlreadyExistException();
         }else {
             Category category = new Category(categoryName);
@@ -47,9 +47,5 @@ public class CategoryService implements ICategoryService {
     public Category findById(Integer categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
-    }
-    public CategoryDto getByName(String name) {
-        Category category = categoryRepository.findByName(name);
-        return categoryMapper.toDto(category);
     }
 }
