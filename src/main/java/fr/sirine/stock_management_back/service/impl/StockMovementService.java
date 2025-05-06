@@ -66,7 +66,7 @@ public class StockMovementService implements IStockMovementService {
         stockAlertService.checkStockLevel(product);
 
         stockMovementRepository.save(stockMovement);
-        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getUser().getId(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate(), stockMovement.getGroup().getId());
+        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate(), stockMovement.getGroup().getId());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StockMovementService implements IStockMovementService {
         }
 
         return movements.stream()
-                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getUser().getId(), m.getType().toString(), m.getQuantity(), m.getDate(), m.getGroup().getId()))
+                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getProduct().getName(), m.getUser().getId(), m.getUser().getFullName(), m.getType().toString(), m.getQuantity(), m.getDate(), m.getGroup().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -102,7 +102,9 @@ public class StockMovementService implements IStockMovementService {
         return movements.stream().map(m -> new StockMovementDto(
                 m.getId(),
                 m.getProduct().getId(),
+                m.getProduct().getName(),
                 m.getUser().getId(),
+                m.getUser().getFullName(),
                 m.getType().toString(),
                 m.getQuantity(),
                 m.getDate(),
@@ -115,7 +117,9 @@ public class StockMovementService implements IStockMovementService {
                 .map(m -> new StockMovementDto(
                         m.getId(),
                         m.getProduct().getId(),
+                        m.getProduct().getName(),
                         m.getUser().getId(),
+                        m.getUser().getFullName(),
                         m.getType().toString(),
                         m.getQuantity(),
                         m.getDate(),
