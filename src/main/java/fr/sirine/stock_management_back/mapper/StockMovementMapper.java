@@ -28,6 +28,8 @@ public abstract class StockMovementMapper implements EntityMapper<StockMovementD
     @Mapping(target = "productId", expression = "java(stockMovement.getProduct().getId())")
     @Mapping(target = "userId", expression = "java(stockMovement.getUser().getId())")
     @Mapping(target = "groupId", expression = "java(stockMovement.getGroup().getId())")
+    @Mapping(source = "user.fullName", target = "userName")
+    @Mapping(source = "product.name", target = "productName")
     public abstract StockMovementDto toDto(StockMovement stockMovement);
 
     @Mapping(target = "product", source = "productId", qualifiedByName = "findProductById")
