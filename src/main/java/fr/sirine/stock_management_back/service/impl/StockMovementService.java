@@ -7,6 +7,7 @@ import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.StockMovement;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
+import fr.sirine.stock_management_back.mapper.StockMovementMapper;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.IGroupService;
 import fr.sirine.stock_management_back.service.IProductService;
@@ -25,13 +26,15 @@ public class StockMovementService implements IStockMovementService {
     private final IUserService userService;
     private final StockAlertService stockAlertService;
     private final IGroupService groupService;
+    private final StockMovementMapper stockMovementMapper;
 
-    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService, IUserService userService, StockAlertService stockAlertService, IGroupService groupService) {
+    public StockMovementService(StockMovementRepository stockMovementRepository, IProductService productService, IUserService userService, StockAlertService stockAlertService, IGroupService groupService, StockMovementMapper stockMovementMapper) {
         this.stockMovementRepository = stockMovementRepository;
         this.productService = productService;
         this.userService = userService;
         this.stockAlertService = stockAlertService;
         this.groupService = groupService;
+        this.stockMovementMapper = stockMovementMapper;
     }
 
     public StockMovementDto addStockMovement(StockMovementDto stockMovementDto) {
@@ -117,6 +120,12 @@ public class StockMovementService implements IStockMovementService {
                         m.getQuantity(),
                         m.getDate(),
                         m.getGroup().getId()))
+                .collect(Collectors.toList());
+    }
+    public List<StockMovementDto> findByGroupId(Integer groupId) {
+        List<StockMovement> movements = stockMovementRepository.findByGroupId(groupId);
+        return movements.stream()
+                .map(stockMovementMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

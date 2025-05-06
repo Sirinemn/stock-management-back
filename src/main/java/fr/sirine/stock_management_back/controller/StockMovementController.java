@@ -62,5 +62,15 @@ public class StockMovementController {
         List<StockMovementDto> movements = stockMovementService.getStockMovements(userId, productId, groupId, startDate, endDate);
         return ResponseEntity.ok(movements);
     }
+    @Operation(summary = "Obtenir les 10 derniers mouvements de stock d'un groupe", description = "Retourne les derniers mouvements de stock pour un groupe donné.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des mouvements de stock récupérée avec succès"),
+            @ApiResponse(responseCode = "404", description = "Groupe non trouvé")
+    })
+    @GetMapping("/movements")
+    public ResponseEntity<List<StockMovementDto>> getLastStockMovements(@RequestParam Integer groupId) {
+        List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
+        return ResponseEntity.ok(movements);
+    }
 }
 
