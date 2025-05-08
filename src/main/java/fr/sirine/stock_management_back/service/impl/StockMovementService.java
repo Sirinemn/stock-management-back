@@ -89,13 +89,13 @@ public class StockMovementService implements IStockMovementService {
         List<StockMovement> movements;
 
         if (userId != null && productId != null && startDate != null && endDate != null) {
-            movements = stockMovementRepository.findByUserIdAndProductIdAndGroupIdAndDateBetween(userId, productId, groupId, startDate, endDate);
+            movements = stockMovementRepository.findByUserIdAndProductIdAndGroupIdAndCreatedDateBetween(userId, productId, groupId, startDate, endDate);
         } else if (userId != null) {
             movements = stockMovementRepository.findByUserId(userId);
         } else if (productId != null) {
             movements = stockMovementRepository.findAllByProductId(productId);
         } else if (startDate != null && endDate != null) {
-            movements = stockMovementRepository.findByDateBetween(startDate, endDate);
+            movements = stockMovementRepository.findByCreatedDateBetween(startDate, endDate);
         } else {
             movements = stockMovementRepository.findAll();
         }
@@ -114,7 +114,7 @@ public class StockMovementService implements IStockMovementService {
         ).collect(Collectors.toList());
     }
     public List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId) {
-        List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByDateDesc(groupId);
+        List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByCreatedDateDesc(groupId);
         return movements.stream()
                 .map(m -> new StockMovementDto(
                         m.getId(),
