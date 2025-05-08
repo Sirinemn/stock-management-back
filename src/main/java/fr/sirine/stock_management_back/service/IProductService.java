@@ -10,5 +10,6 @@ public interface IProductService {
     ProductDto updateProduct(ProductDto productDto);
     long countByGroupId(Integer groupId);
     long countByGroupIdAndQuantityLessThan(Integer groupId, int quantity);
+    boolean existsByCategoryIdAndGroupId(Integer categoryId, Integer groupId);
 }
 

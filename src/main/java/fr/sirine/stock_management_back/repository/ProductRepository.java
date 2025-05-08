@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findByNameAndGroupId(String name, Integer integer);
 
     List<Product> findAllByGroupId(Integer groupId);
+
+    boolean existsByCategoryIdAndGroupId(Integer categoryId, Integer groupId);
 }
