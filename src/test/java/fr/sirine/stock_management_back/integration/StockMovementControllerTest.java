@@ -100,7 +100,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une entrée de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementEntry() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"ENTREE", 5, LocalDateTime.now(),group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"ENTREE", 5, LocalDateTime.now(),group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +116,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une sortie de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExit() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 5, LocalDateTime.now(), group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 5, LocalDateTime.now(), group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une sortie de stock insuffisante")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExitInsufficientStock() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), user.getId(),"SORTIE", 12, LocalDateTime.now(),group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 12, LocalDateTime.now(),group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
