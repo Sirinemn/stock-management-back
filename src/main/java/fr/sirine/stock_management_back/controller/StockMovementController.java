@@ -72,5 +72,25 @@ public class StockMovementController {
         List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
         return ResponseEntity.ok(movements);
     }
+    @Operation(summary = "Supprimer un mouvement de stock", description = "Supprime un mouvement de stock donné.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mouvement de stock supprimé avec succès"),
+            @ApiResponse(responseCode = "404", description = "Mouvement de stock non trouvé")
+    })
+    @DeleteMapping("/movement/{id}")
+    public ResponseEntity<MessageResponse> deleteStockMovement(@PathVariable Integer id) {
+        stockMovementService.deleteStockMovement(id);
+        return ResponseEntity.ok(new MessageResponse("Mouvement de stock supprimé avec succès"));
+    }
+    @Operation(summary = "Mettre à jour un mouvement de stock", description = "Met à jour un mouvement de stock donné.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mouvement de stock mis à jour avec succès"),
+            @ApiResponse(responseCode = "404", description = "Mouvement de stock non trouvé")
+    })
+    @PutMapping("/movement/{id}")
+    public ResponseEntity<MessageResponse> updateStockMovement(@PathVariable Integer id, @RequestBody @Valid StockMovementDto stockMovementDto) {
+        stockMovementService.updateStockMovement(id, stockMovementDto);
+        return ResponseEntity.ok(new MessageResponse("Mouvement de stock mis à jour avec succès"));
+    }
 }
 
