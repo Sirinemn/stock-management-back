@@ -5,6 +5,7 @@ import fr.sirine.stock_management_back.service.impl.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ public class CategorieController {
         this.categoryService = categoryService;
     }
     @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
+    @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam("groupId") @Valid Integer groupId) {
         List<CategoryDto> categories = categoryService.getAllCategories(groupId);
         return ResponseEntity.ok(categories);
