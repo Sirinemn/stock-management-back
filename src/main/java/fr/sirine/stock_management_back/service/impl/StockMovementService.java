@@ -132,5 +132,48 @@ public class StockMovementService implements IStockMovementService {
                 .map(stockMovementMapper::toDto)
                 .collect(Collectors.toList());
     }
+    public void deleteStockMovement(Integer id) {
+        StockMovement stockMovement = stockMovementRepository.findById(id).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
+        StockMovement.TypeMovement type = stockMovement.getType();
+        int quantity = stockMovement.getQuantity();
+        Product product = stockMovement.getProduct();
+        if (type == StockMovement.TypeMovement.ENTREE) {
+            product.setQuantity(product.getQuantity() - quantity);
+        } else if (type == StockMovement.TypeMovement.SORTIE) {
+            product.setQuantity(product.getQuantity() + quantity);
+        }
+        productService.updateProduct(new ProductDto(product));
+        stockMovementRepository.delete(stockMovement);
+    }
+    public void updateStockMovement(StockMovementDto stockMovementDto) {
+        StockMovement stockMovement = stockMovementRepository.findById(stockMovementDto.getId()).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
+        // Supprimer le mouvement de stock existant
+        StockMovement.TypeMovement type = stockMovement.getType();
+        int quantity = stockMovement.getQuantity();
+        Product product = stockMovement.getProduct();
+        if (type == StockMovement.TypeMovement.ENTREE) {
+            product.setQuantity(product.getQuantity() - quantity);
+        } else if (type == StockMovement.TypeMovement.SORTIE) {
+            product.setQuantity(product.getQuantity() + quantity);
+        }
+        // Mise à jour du stock du produit
+        StockMovement.TypeMovement typeMovement = StockMovement.TypeMovement.valueOf(stockMovementDto.getType());
+        if (typeMovement == StockMovement.TypeMovement.ENTREE) {
+            product.setQuantity(product.getQuantity() + stockMovementDto.getQuantity());
+        } else if (typeMovement == StockMovement.TypeMovement.SORTIE) {
+            if (product.getQuantity() < stockMovementDto.getQuantity()) {
+                throw new InsufficientStockException();
+            }
+            product.setQuantity(product.getQuantity() - stockMovementDto.getQuantity());
+        }
+
+        // Mettre à jour le produit via le service
+        productService.updateProduct(new ProductDto(product));
+        stockAlertService.checkStockLevel(product);
+        // Mettre à jour le mouvement de stock
+        stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
+        stockMovement.setQuantity(stockMovementDto.getQuantity());
+        stockMovementRepository.save(stockMovement);
+    }
 }
 
