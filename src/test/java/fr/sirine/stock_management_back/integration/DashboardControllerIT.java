@@ -51,6 +51,7 @@ public class DashboardControllerIT {
                 .build();
         when(dashboardService.getDashboardOverview(group.getId())).thenReturn(dashboardOverviewDto);
         MockHttpServletRequestBuilder request = get("/dashboard/overview")
+                .param("groupId", String.valueOf(group.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dashboardOverviewDto));
         mockMvc.perform(request)
