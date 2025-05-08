@@ -21,13 +21,11 @@ public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final IUserService userService;
-    private final IProductService productService;
 
-    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, IUserService userService, IProductService productService) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, IUserService userService) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
         this.userService = userService;
-        this.productService = productService;
     }
 
     public List<CategoryDto> getAllCategories(Integer groupId) {
@@ -44,12 +42,7 @@ public class CategoryService implements ICategoryService {
             categoryRepository.save(category);
         }
     }
-    public void deleteCategory(Integer id, Integer groupId) {
-        categoryRepository.deleteById(id);
-        boolean hasProducts = productService.existsByCategoryIdAndGroupId(id, groupId);
-        if (hasProducts) {
-            throw new IllegalStateException("Impossible de supprimer la catégorie car elle contient des produits.");
-        }
+    public void deleteCategory(Integer id) {
         categoryRepository.deleteById(id);
     }
     public Category findById(Integer categoryId) {

@@ -30,6 +30,8 @@ public class CategoryServiceTest {
     private CategoryService categoryService;
     @Mock
     private UserService userService;
+    @Mock
+    private IProductService productService;
 
     private Category category;
     private CategoryDto categoryDto;
@@ -75,7 +77,7 @@ public class CategoryServiceTest {
     }
     @Test
     void should_delete_category() {
-        categoryService.deleteCategory(1, 1);
+        categoryService.deleteCategory(1);
         verify(categoryRepository, times(1)).deleteById(1);
     }
     @Test
