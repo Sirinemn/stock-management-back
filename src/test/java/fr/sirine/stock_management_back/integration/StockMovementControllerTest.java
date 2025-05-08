@@ -100,7 +100,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une entrée de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementEntry() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"ENTREE", 5, LocalDateTime.now(),group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"ENTREE", 5, LocalDateTime.now(), null,group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +116,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une sortie de stock")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExit() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 5, LocalDateTime.now(), group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 5, LocalDateTime.now(), null, group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ class StockMovementControllerTest {
     @DisplayName("Ajout d'une sortie de stock insuffisante")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testAddStockMovementExitInsufficientStock() throws Exception {
-        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 12, LocalDateTime.now(),group.getId());
+        StockMovementDto stockMovementDto = new StockMovementDto(null, product.getId(), product.getName(), user.getId(), user.getFullName(),"SORTIE", 12, LocalDateTime.now(), null,group.getId());
 
         mockMvc.perform(post("/stocks/movement")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -143,8 +143,8 @@ class StockMovementControllerTest {
     @DisplayName("Récupération des mouvements de stock d'un produit")
     @WithMockUser(username = "mockUser", authorities = {"USER"})
     void testGetStockMovements() throws Exception {
-        stockMovementRepository.save(new StockMovement(null,product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), user, group));
-        stockMovementRepository.save(new StockMovement(null, product, StockMovement.TypeMovement.SORTIE, 2, LocalDateTime.now(), user, group));
+        stockMovementRepository.save(new StockMovement(null,product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), null, user, group));
+        stockMovementRepository.save(new StockMovement(null, product, StockMovement.TypeMovement.SORTIE, 2, LocalDateTime.now(), null, user, group));
 
         mockMvc.perform(get("/stocks/movements/" + product.getId()))
                 .andExpect(status().isOk())
@@ -165,7 +165,7 @@ class StockMovementControllerTest {
         product.setQuantity(10);
         productRepository.save(product);
 
-        StockMovement stockMovement = new StockMovement(null, product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), user,group);
+        StockMovement stockMovement = new StockMovement(null, product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), null, user,group);
         stockMovementRepository.save(stockMovement);
 
         mockMvc.perform(get("/stocks/history")
