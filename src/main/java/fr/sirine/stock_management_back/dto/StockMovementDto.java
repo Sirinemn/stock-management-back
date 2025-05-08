@@ -17,6 +17,7 @@ public class StockMovementDto {
     private String userName;
     private String type;
     private int quantity;
-    private LocalDateTime date;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
     private Integer groupId;
 }
