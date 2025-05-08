@@ -156,7 +156,7 @@ public class AdminControllerIT {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void shouldDeleteCategory() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/categories/"+category.getId());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/admin/categories/"+category.getId()).param("groupId", String.valueOf(group.getId()));
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }

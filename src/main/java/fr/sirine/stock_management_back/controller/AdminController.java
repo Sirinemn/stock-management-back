@@ -1,11 +1,14 @@
 package fr.sirine.stock_management_back.controller;
 
-import fr.sirine.stock_management_back.dto.CategoryDto;
 import fr.sirine.stock_management_back.dto.UserDto;
+import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.User;
+import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
+import fr.sirine.stock_management_back.exceptions.custom.IllegalStateException;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
+import fr.sirine.stock_management_back.service.impl.ProductService;
 import fr.sirine.stock_management_back.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,12 +33,14 @@ public class AdminController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final CategoryService categoryService;
+    private final ProductService productService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService) {
+    public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService, ProductService productService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.categoryService = categoryService;
+        this.productService = productService;
         logger.info("AdminController initialized");
     }
 
@@ -75,7 +80,11 @@ public class AdminController {
     @DeleteMapping("/categories/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Integer id, @RequestParam Integer groupId) {
-        categoryService.deleteCategory(id, groupId);
+        boolean hasProducts = productService.existsByCategoryIdAndGroupId(id, groupId);
+        if (hasProducts) {
+            throw new IllegalStateException("Impossible de supprimer la catégorie car elle contient des produits.");
+        }
+        categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
