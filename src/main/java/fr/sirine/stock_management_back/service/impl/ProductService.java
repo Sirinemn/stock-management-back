@@ -96,4 +96,9 @@ public class ProductService implements IProductService {
     public long countByGroupIdAndQuantityLessThan(Integer groupId,int i) {
         return productRepository.countByQuantityLessThan(i);
     }
+
+    @Override
+    public boolean existsByCategoryIdAndGroupId(Integer categoryId, Integer groupId) {
+        return productRepository.existsByCategoryIdAndGroupId(categoryId, groupId);
+    }
 }
