@@ -74,8 +74,8 @@ public class AdminController {
     @Operation(summary = "Delete a category", description = "Admin can delete a category by ID")
     @DeleteMapping("/categories/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
-        categoryService.deleteCategory(id);
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id, @RequestParam Integer groupId) {
+        categoryService.deleteCategory(id, groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
