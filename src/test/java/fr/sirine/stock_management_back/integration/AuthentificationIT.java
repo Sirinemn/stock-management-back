@@ -48,13 +48,14 @@ public class AuthentificationIT {
                 .email("email@test.fr")
                 .dateOfBirth(LocalDateTime.now())
                 .password("password")
+                .groupName("group")
                 .build();
         String registrationRequestJson = objectMapper.writeValueAsString(registerAdminRequest);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registrationRequestJson);
         mockMvc.perform(request)
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
     @Test
     void shouldreturnBadRequestWhenRegisteringWithInvalidRequest() throws Exception {
