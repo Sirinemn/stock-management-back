@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICategoryService {
     List<CategoryDto> getAllCategories(Integer userId);
     void addCategory(String categoryName, Integer userId);
-    void deleteCategory(Integer id);
+    void deleteCategory(Integer id, Integer groupId);
     Category findById(Integer categoryId);
 }
 

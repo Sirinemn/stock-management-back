@@ -75,7 +75,7 @@ public class CategoryServiceTest {
     }
     @Test
     void should_delete_category() {
-        categoryService.deleteCategory(1);
+        categoryService.deleteCategory(1, 1);
         verify(categoryRepository, times(1)).deleteById(1);
     }
     @Test
