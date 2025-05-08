@@ -36,7 +36,7 @@ public class DashboardServiceTest {
                 .userId(1)
                 .productId(1)
                 .quantity(1)
-                .date(LocalDateTime.now())
+                .createdDate(LocalDateTime.now())
                 .type("SORTIE")
                 .build();
         DashboardOverviewDto dashboardOverviewDto = DashboardOverviewDto.builder()
