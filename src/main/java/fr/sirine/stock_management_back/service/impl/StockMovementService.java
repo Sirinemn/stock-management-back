@@ -49,7 +49,6 @@ public class StockMovementService implements IStockMovementService {
         stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
         stockMovement.setQuantity(stockMovementDto.getQuantity());
         stockMovement.setUser(user);
-        stockMovement.setDate(LocalDateTime.now());
 
         // Mise à jour du stock du produit
         if (stockMovement.getType() == StockMovement.TypeMovement.ENTREE) {
@@ -66,7 +65,8 @@ public class StockMovementService implements IStockMovementService {
         stockAlertService.checkStockLevel(product);
 
         stockMovementRepository.save(stockMovement);
-        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getDate(), stockMovement.getGroup().getId());
+        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getCreatedDate(),
+                stockMovement.getLastModifiedDate(), stockMovement.getGroup().getId());
     }
 
     @Override
@@ -80,7 +80,8 @@ public class StockMovementService implements IStockMovementService {
         }
 
         return movements.stream()
-                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getProduct().getName(), m.getUser().getId(), m.getUser().getFullName(), m.getType().toString(), m.getQuantity(), m.getDate(), m.getGroup().getId()))
+                .map(m -> new StockMovementDto(m.getId(), m.getProduct().getId(), m.getProduct().getName(), m.getUser().getId(), m.getUser().getFullName(), m.getType().toString(), m.getQuantity(),m.getCreatedDate(),
+                        m.getLastModifiedDate(), m.getGroup().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -107,7 +108,8 @@ public class StockMovementService implements IStockMovementService {
                 m.getUser().getFullName(),
                 m.getType().toString(),
                 m.getQuantity(),
-                m.getDate(),
+                m.getCreatedDate(),
+                m.getLastModifiedDate(),
                 m.getGroup().getId())
         ).collect(Collectors.toList());
     }
@@ -122,7 +124,8 @@ public class StockMovementService implements IStockMovementService {
                         m.getUser().getFullName(),
                         m.getType().toString(),
                         m.getQuantity(),
-                        m.getDate(),
+                        m.getCreatedDate(),
+                        m.getLastModifiedDate(),
                         m.getGroup().getId()))
                 .collect(Collectors.toList());
     }
