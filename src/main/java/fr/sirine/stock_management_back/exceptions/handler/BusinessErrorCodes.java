@@ -23,7 +23,8 @@ public enum BusinessErrorCodes {
     GROUP_ALREADY_EXIST(1013, "Groupe déjà utilisé", HttpStatus.CONFLICT),
     GROUP_NOT_FOUND(1014, "Groupe non trouvé", HttpStatus.NOT_FOUND),
     PRODUCT_ALREADY_EXIST(1015, "Nom du produit déja utilisé", HttpStatus.CONFLICT),
-    INTERNAL_SERVER_ERROR(1016, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
+    ILLEGAL_STATE(1016, "État illégal", HttpStatus.BAD_REQUEST),
+    INTERNAL_SERVER_ERROR(1017, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
     private final int code;

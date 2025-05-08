@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.exceptions.handler;
 
 import fr.sirine.stock_management_back.exceptions.custom.*;
+import fr.sirine.stock_management_back.exceptions.custom.IllegalStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -103,6 +104,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(RoleNotFoundException exp) {
         logger.error("Role not found", exp);
         return buildResponseEntity(BusinessErrorCodes.ROLE_NOT_FOUND, exp.getMessage());
+    }
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ExceptionResponse> handleException(IllegalStateException exp) {
+        logger.error("Illegal state", exp);
+        return buildResponseEntity(BusinessErrorCodes.ILLEGAL_STATE, exp.getMessage());
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
