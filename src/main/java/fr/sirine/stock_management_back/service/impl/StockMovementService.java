@@ -145,8 +145,8 @@ public class StockMovementService implements IStockMovementService {
         productService.updateProduct(new ProductDto(product));
         stockMovementRepository.delete(stockMovement);
     }
-    public void updateStockMovement(StockMovementDto stockMovementDto) {
-        StockMovement stockMovement = stockMovementRepository.findById(stockMovementDto.getId()).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
+    public void updateStockMovement(Integer id, StockMovementDto stockMovementDto) {
+        StockMovement stockMovement = stockMovementRepository.findById(id).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
         // Supprimer le mouvement de stock existant
         StockMovement.TypeMovement type = stockMovement.getType();
         int quantity = stockMovement.getQuantity();
