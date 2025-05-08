@@ -162,13 +162,6 @@ public class AdminControllerIT {
     }
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    void shouldReturnAllCategories() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/admin/categories").param("userId", String.valueOf(admin.getId()));
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-    }
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void should_add_category() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/admin/category")
                 .param("name", "newCategory")

@@ -78,12 +78,6 @@ public class AdminController {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam("groupId") @Valid Integer groupId) {
-        List<CategoryDto> categories = categoryService.getAllCategories(groupId);
-        return ResponseEntity.ok(categories);
-    }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
     @PostMapping("/category")
     @PreAuthorize("hasAuthority('ADMIN')")
