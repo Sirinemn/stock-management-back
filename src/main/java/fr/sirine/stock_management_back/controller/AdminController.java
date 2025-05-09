@@ -1,12 +1,13 @@
 package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.UserDto;
-import fr.sirine.stock_management_back.entities.Category;
 import fr.sirine.stock_management_back.entities.User;
-import fr.sirine.stock_management_back.exceptions.custom.CategoryNotFoundException;
 import fr.sirine.stock_management_back.exceptions.custom.IllegalStateException;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
+import fr.sirine.stock_management_back.service.ICategoryService;
+import fr.sirine.stock_management_back.service.IProductService;
+import fr.sirine.stock_management_back.service.IUserService;
 import fr.sirine.stock_management_back.service.impl.CategoryService;
 import fr.sirine.stock_management_back.service.impl.ProductService;
 import fr.sirine.stock_management_back.service.impl.UserService;
@@ -30,10 +31,10 @@ import java.util.List;
 @Tag(name = "Admin Management", description = "Admin operations for managing users and categories")
 public class AdminController {
 
-    private final UserService userService;
+    private final IUserService userService;
     private final UserMapper userMapper;
-    private final CategoryService categoryService;
-    private final ProductService productService;
+    private final ICategoryService categoryService;
+    private final IProductService productService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService, ProductService productService) {
