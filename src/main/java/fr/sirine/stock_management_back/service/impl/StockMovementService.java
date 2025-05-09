@@ -51,18 +51,7 @@ public class StockMovementService implements IStockMovementService {
         stockMovement.setUser(user);
 
         // Mise à jour du stock du produit
-        if (stockMovement.getType() == StockMovement.TypeMovement.ENTREE) {
-            product.setQuantity(product.getQuantity() + stockMovement.getQuantity());
-        } else if (stockMovement.getType() == StockMovement.TypeMovement.SORTIE) {
-            if (product.getQuantity() < stockMovement.getQuantity()) {
-                throw new InsufficientStockException();
-            }
-            product.setQuantity(product.getQuantity() - stockMovement.getQuantity());
-        }
-
-        // Mettre à jour le produit via le service
-        productService.updateProduct(new ProductDto(product));
-        stockAlertService.checkStockLevel(product);
+        updateProductStock(product, stockMovementDto);
 
         stockMovementRepository.save(stockMovement);
         return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(), stockMovement.getCreatedDate(),
@@ -100,34 +89,13 @@ public class StockMovementService implements IStockMovementService {
             movements = stockMovementRepository.findAll();
         }
 
-        return movements.stream().map(m -> new StockMovementDto(
-                m.getId(),
-                m.getProduct().getId(),
-                m.getProduct().getName(),
-                m.getUser().getId(),
-                m.getUser().getFullName(),
-                m.getType().toString(),
-                m.getQuantity(),
-                m.getCreatedDate(),
-                m.getLastModifiedDate(),
-                m.getGroup().getId())
-        ).collect(Collectors.toList());
+        return movements.stream().map(stockMovementMapper::toDto).collect(Collectors.toList());
+
     }
     public List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId) {
         List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByCreatedDateDesc(groupId);
         return movements.stream()
-                .map(m -> new StockMovementDto(
-                        m.getId(),
-                        m.getProduct().getId(),
-                        m.getProduct().getName(),
-                        m.getUser().getId(),
-                        m.getUser().getFullName(),
-                        m.getType().toString(),
-                        m.getQuantity(),
-                        m.getCreatedDate(),
-                        m.getLastModifiedDate(),
-                        m.getGroup().getId()))
-                .collect(Collectors.toList());
+                .map(stockMovementMapper::toDto).collect(Collectors.toList());
     }
     public List<StockMovementDto> findByGroupId(Integer groupId) {
         List<StockMovement> movements = stockMovementRepository.findByGroupId(groupId);
@@ -137,19 +105,23 @@ public class StockMovementService implements IStockMovementService {
     }
     public void deleteStockMovement(Integer id) {
         StockMovement stockMovement = stockMovementRepository.findById(id).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
-        StockMovement.TypeMovement type = stockMovement.getType();
-        int quantity = stockMovement.getQuantity();
-        Product product = stockMovement.getProduct();
-        if (type == StockMovement.TypeMovement.ENTREE) {
-            product.setQuantity(product.getQuantity() - quantity);
-        } else if (type == StockMovement.TypeMovement.SORTIE) {
-            product.setQuantity(product.getQuantity() + quantity);
-        }
+        // Supprimer le mouvement de stock existant
+        Product product = deleteExistingStockMovement(stockMovement);
         productService.updateProduct(new ProductDto(product));
         stockMovementRepository.delete(stockMovement);
     }
     public void updateStockMovement(Integer id, StockMovementDto stockMovementDto) {
         StockMovement stockMovement = stockMovementRepository.findById(id).orElseThrow(() -> new RuntimeException("Mouvement de stock non trouvé"));
+        // Supprimer le mouvement de stock existant
+        Product product = deleteExistingStockMovement(stockMovement);
+        // Mise à jour du stock du produit
+        updateProductStock(product, stockMovementDto);
+        // Mettre à jour le mouvement de stock
+        stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
+        stockMovement.setQuantity(stockMovementDto.getQuantity());
+        stockMovementRepository.save(stockMovement);
+    }
+    private Product deleteExistingStockMovement(StockMovement stockMovement) {
         // Supprimer le mouvement de stock existant
         StockMovement.TypeMovement type = stockMovement.getType();
         int quantity = stockMovement.getQuantity();
@@ -159,7 +131,9 @@ public class StockMovementService implements IStockMovementService {
         } else if (type == StockMovement.TypeMovement.SORTIE) {
             product.setQuantity(product.getQuantity() + quantity);
         }
-        // Mise à jour du stock du produit
+        return product;
+    }
+    private void updateProductStock(Product product, StockMovementDto stockMovementDto) {
         StockMovement.TypeMovement typeMovement = StockMovement.TypeMovement.valueOf(stockMovementDto.getType());
         if (typeMovement == StockMovement.TypeMovement.ENTREE) {
             product.setQuantity(product.getQuantity() + stockMovementDto.getQuantity());
@@ -173,10 +147,7 @@ public class StockMovementService implements IStockMovementService {
         // Mettre à jour le produit via le service
         productService.updateProduct(new ProductDto(product));
         stockAlertService.checkStockLevel(product);
-        // Mettre à jour le mouvement de stock
-        stockMovement.setType(StockMovement.TypeMovement.valueOf(stockMovementDto.getType()));
-        stockMovement.setQuantity(stockMovementDto.getQuantity());
-        stockMovementRepository.save(stockMovement);
+
     }
 }
 
