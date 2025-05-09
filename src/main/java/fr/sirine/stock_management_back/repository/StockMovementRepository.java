@@ -16,4 +16,6 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, In
     List<StockMovement> findByGroupId(Integer groupId);
     List<StockMovement> findTop10ByGroupIdOrderByCreatedDateDesc(Integer groupId);
     List<StockMovement> findByProductIdAndGroupId(Integer productId, Integer groupId);
+
+    boolean existsByProductIdAndGroupId(Integer productId, Integer groupId);
 }
