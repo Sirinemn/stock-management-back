@@ -147,7 +147,9 @@ public class StockMovementService implements IStockMovementService {
         // Mettre à jour le produit via le service
         productService.updateProduct(new ProductDto(product));
         stockAlertService.checkStockLevel(product);
-
+    }
+    public boolean hasStockMovement(Integer productId, Integer groupId) {
+        return stockMovementRepository.existsByProductIdAndGroupId(productId, groupId);
     }
 }
 
