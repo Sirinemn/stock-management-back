@@ -81,9 +81,10 @@ public class AdminController {
         boolean hasProducts = productService.existsByCategoryIdAndGroupId(id, groupId);
         if (hasProducts) {
             throw new IllegalStateException("Impossible de supprimer la catégorie car elle contient des produits.");
+        } else {
+            categoryService.deleteCategory(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        categoryService.deleteCategory(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @Operation(summary = "Add a category", description = "Admin can add a new category")
     @PostMapping("/category")

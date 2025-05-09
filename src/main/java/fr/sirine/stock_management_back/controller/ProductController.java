@@ -2,9 +2,11 @@ package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.entities.Product;
+import fr.sirine.stock_management_back.exceptions.custom.IllegalStateException;
 import fr.sirine.stock_management_back.mapper.ProductMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.IProductService;
+import fr.sirine.stock_management_back.service.IStockMovementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,10 +23,12 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService productService;
+    private final IStockMovementService stockMovementService;
     private final ProductMapper productMapper;
 
-    public ProductController(IProductService productService, ProductMapper productMapper) {
+    public ProductController(IProductService productService, IStockMovementService stockMovementService, ProductMapper productMapper) {
         this.productService = productService;
+        this.stockMovementService = stockMovementService;
         this.productMapper = productMapper;
     }
 
@@ -62,9 +66,15 @@ public class ProductController {
     @Operation(summary = "Delete a product", description = "Delete a product by its ID")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id, @RequestParam("groupId") Integer groupId) {
+        // Check if the product has stock movements before deletion
+        boolean hasStockMovement = stockMovementService.hasStockMovement(id, groupId);
+        if (hasStockMovement) {
+            throw new IllegalStateException("Impossible de supprimer le produit car il est associé à des movements.");
+        } else {
+            productService.deleteProduct(id);
+            return ResponseEntity.noContent().build();
+        }
     }
 }
 
