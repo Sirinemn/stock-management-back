@@ -37,7 +37,7 @@ public class AdminController {
     private final IProductService productService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public AdminController(UserService userService, UserMapper userMapper, CategoryService categoryService, ProductService productService) {
+    public AdminController(IUserService userService, UserMapper userMapper, ICategoryService categoryService, IProductService productService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.categoryService = categoryService;

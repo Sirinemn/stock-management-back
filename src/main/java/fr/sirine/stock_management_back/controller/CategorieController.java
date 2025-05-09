@@ -1,7 +1,7 @@
 package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.CategoryDto;
-import fr.sirine.stock_management_back.service.impl.CategoryService;
+import fr.sirine.stock_management_back.service.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 public class CategorieController {
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
-    public CategorieController(CategoryService categoryService) {
+    public CategorieController(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
     @Operation(summary = "Get all categories", description = "Retrieve a list of all categories")
