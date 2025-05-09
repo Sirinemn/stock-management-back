@@ -2,6 +2,7 @@ package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
+import fr.sirine.stock_management_back.service.IStockMovementService;
 import fr.sirine.stock_management_back.service.impl.StockMovementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequestMapping("/stocks")
 @Tag(name = "Stock Movements", description = "API pour la gestion des mouvements de stock")
 public class StockMovementController {
-    private final StockMovementService stockMovementService;
+    private final IStockMovementService stockMovementService;
 
     public StockMovementController(StockMovementService stockMovementService) {
         this.stockMovementService = stockMovementService;

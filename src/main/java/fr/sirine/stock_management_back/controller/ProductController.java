@@ -4,7 +4,7 @@ import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.mapper.ProductMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
-import fr.sirine.stock_management_back.service.impl.ProductService;
+import fr.sirine.stock_management_back.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,10 +20,10 @@ import java.util.List;
 @Tag(name = "Product Management", description = "Operations related to product management")
 public class ProductController {
 
-    private final ProductService productService;
+    private final IProductService productService;
     private final ProductMapper productMapper;
 
-    public ProductController(ProductService productService, ProductMapper productMapper) {
+    public ProductController(IProductService productService, ProductMapper productMapper) {
         this.productService = productService;
         this.productMapper = productMapper;
     }
