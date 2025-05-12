@@ -87,7 +87,6 @@ public class AuthenticationService {
                 "password", request.getPassword().substring(0, 3) + "*".repeat(passwordLength - 3));
 
         emailService.sendEmail(user.getEmail(), "Inscription réussie","emails/registration" , emailMessage);
-
         return user;
     }
     public User registerAdmin(RegisterAdminRequest request) {
@@ -125,7 +124,6 @@ public class AuthenticationService {
 
         return admin;
     }
-
 
     public AuthenticationResponse authenticate(LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
