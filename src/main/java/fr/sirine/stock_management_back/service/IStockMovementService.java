@@ -17,5 +17,6 @@ public interface IStockMovementService {
     void deleteStockMovement(Integer productId);
     boolean hasStockMovement(Integer productId, Integer groupId);
     void updateStockMovement(Integer stockId, StockMovementDto stockMovementDto);
+    StockMovementDto getStockMovementById(Integer stockId);
 
 }

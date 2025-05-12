@@ -7,6 +7,7 @@ import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.entities.StockMovement;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
+import fr.sirine.stock_management_back.exceptions.custom.StockMovementNotFoundException;
 import fr.sirine.stock_management_back.mapper.StockMovementMapper;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.IGroupService;
@@ -150,6 +151,11 @@ public class StockMovementService implements IStockMovementService {
     }
     public boolean hasStockMovement(Integer productId, Integer groupId) {
         return stockMovementRepository.existsByProductIdAndGroupId(productId, groupId);
+    }
+    public StockMovementDto getStockMovementById(Integer stockId) {
+        StockMovement stockMovement = stockMovementRepository.findById(stockId).orElseThrow(StockMovementNotFoundException::new);
+        return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(),stockMovement.getCreatedDate(),
+                stockMovement.getLastModifiedDate(), stockMovement.getGroup().getId());
     }
 }
 

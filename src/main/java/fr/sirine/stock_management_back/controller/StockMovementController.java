@@ -93,5 +93,15 @@ public class StockMovementController {
         stockMovementService.updateStockMovement(id, stockMovementDto);
         return ResponseEntity.ok(new MessageResponse("Mouvement de stock mis à jour avec succès"));
     }
+    @Operation(summary = "Obtenir un mouvement de stock par ID", description = "Retourne un mouvement de stock spécifique par son ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mouvement de stock récupéré avec succès"),
+            @ApiResponse(responseCode = "404", description = "Mouvement de stock non trouvé")
+    })
+    @GetMapping("/movement/{id}")
+    public ResponseEntity<StockMovementDto> getStockMovementById(@PathVariable Integer id) {
+        StockMovementDto movement = stockMovementService.getStockMovementById(id);
+        return ResponseEntity.ok(movement);
+    }
 }
 
