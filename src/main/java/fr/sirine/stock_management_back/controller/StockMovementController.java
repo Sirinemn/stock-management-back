@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.controller;
 
 import fr.sirine.stock_management_back.dto.StockMovementDto;
+import fr.sirine.stock_management_back.payload.request.StockMovementFilter;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.IStockMovementService;
 import fr.sirine.stock_management_back.service.impl.StockMovementService;
@@ -54,13 +55,9 @@ public class StockMovementController {
     })
     @GetMapping("/history")
     public ResponseEntity<List<StockMovementDto>> getStockMovements(
-            @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) Integer productId,
-            @RequestParam(required = false) Integer groupId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestBody StockMovementFilter filter) {
 
-        List<StockMovementDto> movements = stockMovementService.getStockMovements(userId, productId, groupId, startDate, endDate);
+        List<StockMovementDto> movements = stockMovementService.getStockMovements(filter);
         return ResponseEntity.ok(movements);
     }
     @Operation(summary = "Obtenir les 10 derniers mouvements de stock d'un groupe", description = "Retourne les derniers mouvements de stock pour un groupe donné.")

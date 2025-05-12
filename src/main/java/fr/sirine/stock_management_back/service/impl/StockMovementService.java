@@ -9,6 +9,7 @@ import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.exceptions.custom.InsufficientStockException;
 import fr.sirine.stock_management_back.exceptions.custom.StockMovementNotFoundException;
 import fr.sirine.stock_management_back.mapper.StockMovementMapper;
+import fr.sirine.stock_management_back.payload.request.StockMovementFilter;
 import fr.sirine.stock_management_back.repository.StockMovementRepository;
 import fr.sirine.stock_management_back.service.IGroupService;
 import fr.sirine.stock_management_back.service.IProductService;
@@ -75,8 +76,13 @@ public class StockMovementService implements IStockMovementService {
                 .collect(Collectors.toList());
     }
 
-    public List<StockMovementDto> getStockMovements(Integer userId, Integer productId, Integer groupId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<StockMovementDto> getStockMovements(StockMovementFilter filter) {
         List<StockMovement> movements;
+        Integer userId = filter.getUserId() != null ? filter.getUserId().intValue() : null;
+        Integer productId = filter.getProductId() != null ? filter.getProductId().intValue() : null;
+        Integer groupId = filter.getGroupId() != null ? filter.getGroupId().intValue() : null;
+        LocalDateTime startDate = filter.getStartDate() != null ? LocalDateTime.parse(filter.getStartDate()) : null;
+        LocalDateTime endDate = filter.getEndDate() != null ? LocalDateTime.parse(filter.getEndDate()) : null;
 
         if (userId != null && productId != null && startDate != null && endDate != null) {
             movements = stockMovementRepository.findByUserIdAndProductIdAndGroupIdAndCreatedDateBetween(userId, productId, groupId, startDate, endDate);
