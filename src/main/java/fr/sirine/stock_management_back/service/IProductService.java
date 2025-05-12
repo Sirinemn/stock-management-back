@@ -15,5 +15,6 @@ public interface IProductService {
     long countByGroupIdAndQuantityLessThan(Integer groupId, int quantity);
     boolean existsByCategoryIdAndGroupId(Integer categoryId, Integer groupId);
     List<ProductDto> findAllByGroupId(Integer groupId);
+    List<ProductDto> findAllByGroupIdAndCategoryId(Integer groupId, Integer categoryId);
 }
 

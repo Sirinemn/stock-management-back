@@ -101,4 +101,9 @@ public class ProductService implements IProductService {
     public boolean existsByCategoryIdAndGroupId(Integer categoryId, Integer groupId) {
         return productRepository.existsByCategoryIdAndGroupId(categoryId, groupId);
     }
+    public List<ProductDto> findAllByGroupIdAndCategoryId(Integer groupId, Integer categoryId) {
+        return productRepository.findAllByGroupIdAndCategoryId(groupId, categoryId).stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
 }

@@ -47,6 +47,12 @@ public class ProductController {
         Product product = productService.findById(id);
         return ResponseEntity.ok(productMapper.toDto(product));
     }
+    @Operation(summary = "Get products by group ID and category ID", description = "Retrieve products by their group ID and category ID")
+    @GetMapping("/product")
+    public ResponseEntity<List<ProductDto>> getProductsByGroupIdAndCategoryId(@RequestParam("groupId") Integer groupId, @RequestParam("categoryId") Integer categoryId) {
+        List<ProductDto> products = productService.findAllByGroupIdAndCategoryId(groupId, categoryId);
+        return ResponseEntity.ok(products);
+    }
     @Operation(summary = "Get all products", description = "Retrieve all products")
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam("groupId") Integer groupId) {
