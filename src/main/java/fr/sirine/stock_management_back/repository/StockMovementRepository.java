@@ -18,4 +18,12 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, In
     List<StockMovement> findByProductIdAndGroupId(Integer productId, Integer groupId);
 
     boolean existsByProductIdAndGroupId(Integer productId, Integer groupId);
+
+    List<StockMovement> findByUserIdAndProductIdAndGroupId(Integer userId, Integer productId, Integer groupId);
+
+    List<StockMovement> findByUserIdAndProductIdAndCreatedDateBetween(Integer userId, Integer productId, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<StockMovement> findByUserIdAndProductId(Integer userId, Integer productId);
+
+    List<StockMovement> findByUserIdAndGroupId(Integer userId, Integer groupId);
 }

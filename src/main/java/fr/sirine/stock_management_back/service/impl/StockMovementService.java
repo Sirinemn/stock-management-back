@@ -77,27 +77,42 @@ public class StockMovementService implements IStockMovementService {
     }
 
     public List<StockMovementDto> getStockMovements(StockMovementFilter filter) {
-        List<StockMovement> movements;
         Integer userId = filter.getUserId() != null ? filter.getUserId().intValue() : null;
         Integer productId = filter.getProductId() != null ? filter.getProductId().intValue() : null;
         Integer groupId = filter.getGroupId() != null ? filter.getGroupId().intValue() : null;
         LocalDateTime startDate = filter.getStartDate() != null ? LocalDateTime.parse(filter.getStartDate()) : null;
         LocalDateTime endDate = filter.getEndDate() != null ? LocalDateTime.parse(filter.getEndDate()) : null;
 
-        if (userId != null && productId != null && startDate != null && endDate != null) {
+        List<StockMovement> movements;
+
+        // Cas les plus complets d'abord
+        if (userId != null && productId != null && groupId != null && startDate != null && endDate != null) {
             movements = stockMovementRepository.findByUserIdAndProductIdAndGroupIdAndCreatedDateBetween(userId, productId, groupId, startDate, endDate);
+        } else if (userId != null && productId != null && groupId != null) {
+            movements = stockMovementRepository.findByUserIdAndProductIdAndGroupId(userId, productId, groupId);
+        } else if (userId != null && productId != null && startDate != null && endDate != null) {
+            movements = stockMovementRepository.findByUserIdAndProductIdAndCreatedDateBetween(userId, productId, startDate, endDate);
+        } else if (userId != null && productId != null) {
+            movements = stockMovementRepository.findByUserIdAndProductId(userId, productId);
+        } else if (userId != null && groupId != null) {
+            movements = stockMovementRepository.findByUserIdAndGroupId(userId, groupId);
+        } else if (productId != null && groupId != null) {
+            movements = stockMovementRepository.findByProductIdAndGroupId(productId, groupId);
+        } else if (startDate != null && endDate != null) {
+            movements = stockMovementRepository.findByCreatedDateBetween(startDate, endDate);
         } else if (userId != null) {
             movements = stockMovementRepository.findByUserId(userId);
         } else if (productId != null) {
             movements = stockMovementRepository.findAllByProductId(productId);
-        } else if (startDate != null && endDate != null) {
-            movements = stockMovementRepository.findByCreatedDateBetween(startDate, endDate);
+        } else if (groupId != null) {
+            movements = stockMovementRepository.findByGroupId(groupId);
         } else {
             movements = stockMovementRepository.findAll();
         }
 
-        return movements.stream().map(stockMovementMapper::toDto).collect(Collectors.toList());
-
+        return movements.stream()
+                .map(stockMovementMapper::toDto)
+                .collect(Collectors.toList());
     }
     public List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId) {
         List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByCreatedDateDesc(groupId);

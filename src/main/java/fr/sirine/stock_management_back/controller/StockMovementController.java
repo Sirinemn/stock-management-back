@@ -53,7 +53,7 @@ public class StockMovementController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Historique récupéré avec succès")
     })
-    @GetMapping("/history")
+    @PostMapping("/history")
     public ResponseEntity<List<StockMovementDto>> getStockMovements(
             @RequestBody StockMovementFilter filter) {
 
