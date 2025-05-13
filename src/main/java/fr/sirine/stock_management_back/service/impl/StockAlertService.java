@@ -28,8 +28,8 @@ public class StockAlertService {
     private void sendStockAlert(Product product) {
         String subject = "Alert: Stock level below threshold";
 
-        List<UserDto> admins = getAdminsToNotify();
-        for (UserDto admin : admins) {
+        List<UserDto> users = getUsersToNotify(product.getGroup().getId());
+        for (UserDto admin : users) {
             Map<String, Object> variables = Map.of(
                     "adminName", admin.getFirstname() + " " + admin.getLastname(),
                     "productName", product.getName(),
@@ -39,8 +39,8 @@ public class StockAlertService {
         }
     }
 
-    private List<UserDto> getAdminsToNotify() {
-        return userService.findByRole("ADMIN");
+    private List<UserDto> getUsersToNotify(Integer groupId) {
+        return userService.findByGroupId(groupId);
     }
 
 }
