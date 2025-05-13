@@ -79,9 +79,9 @@ public class StockMovementService implements IStockMovementService {
 
     public List<StockMovementDto> getStockMovements(StockMovementFilter filter) {
         List<StockMovement> movements;
-        Integer userId = filter.getUserId() != null ? filter.getUserId().intValue() : null;
-        Integer productId = filter.getProductId() != null ? filter.getProductId().intValue() : null;
-        Integer groupId = filter.getGroupId() != null ? filter.getGroupId().intValue() : null;
+        Integer userId = filter.getUserId() != null ? filter.getUserId() : null;
+        Integer productId = filter.getProductId() != null ? filter.getProductId() : null;
+        Integer groupId = filter.getGroupId() != null ? filter.getGroupId() : null;
 
         LocalDateTime startDate = null;
         LocalDateTime endDate = null;
