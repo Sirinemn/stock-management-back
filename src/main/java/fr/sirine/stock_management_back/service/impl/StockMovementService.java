@@ -18,6 +18,7 @@ import fr.sirine.stock_management_back.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,29 +78,35 @@ public class StockMovementService implements IStockMovementService {
     }
 
     public List<StockMovementDto> getStockMovements(StockMovementFilter filter) {
+        List<StockMovement> movements;
         Integer userId = filter.getUserId() != null ? filter.getUserId().intValue() : null;
         Integer productId = filter.getProductId() != null ? filter.getProductId().intValue() : null;
         Integer groupId = filter.getGroupId() != null ? filter.getGroupId().intValue() : null;
-        LocalDateTime startDate = filter.getStartDate() != null ? LocalDateTime.parse(filter.getStartDate()) : null;
-        LocalDateTime endDate = filter.getEndDate() != null ? LocalDateTime.parse(filter.getEndDate()) : null;
 
-        List<StockMovement> movements;
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
 
-        // Cas les plus complets d'abord
+        if (filter.getStartDate() != null) {
+            startDate = OffsetDateTime.parse(filter.getStartDate()).toLocalDateTime();
+        }
+
+        if (filter.getEndDate() != null) {
+            // Prendre fin de journée
+            endDate = OffsetDateTime.parse(filter.getEndDate()).toLocalDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        }
+
         if (userId != null && productId != null && groupId != null && startDate != null && endDate != null) {
             movements = stockMovementRepository.findByUserIdAndProductIdAndGroupIdAndCreatedDateBetween(userId, productId, groupId, startDate, endDate);
         } else if (userId != null && productId != null && groupId != null) {
             movements = stockMovementRepository.findByUserIdAndProductIdAndGroupId(userId, productId, groupId);
-        } else if (userId != null && productId != null && startDate != null && endDate != null) {
-            movements = stockMovementRepository.findByUserIdAndProductIdAndCreatedDateBetween(userId, productId, startDate, endDate);
+        } else if (startDate != null && endDate != null && productId != null) {
+            movements = stockMovementRepository.findByProductIdAndCreatedDateBetween(productId, startDate, endDate);
+        } else if (startDate != null && endDate != null && groupId != null) {
+            movements = stockMovementRepository.findByGroupIdAndCreatedDateBetween(groupId, startDate, endDate);
         } else if (userId != null && productId != null) {
             movements = stockMovementRepository.findByUserIdAndProductId(userId, productId);
         } else if (userId != null && groupId != null) {
             movements = stockMovementRepository.findByUserIdAndGroupId(userId, groupId);
-        } else if (productId != null && groupId != null) {
-            movements = stockMovementRepository.findByProductIdAndGroupId(productId, groupId);
-        } else if (startDate != null && endDate != null) {
-            movements = stockMovementRepository.findByCreatedDateBetween(startDate, endDate);
         } else if (userId != null) {
             movements = stockMovementRepository.findByUserId(userId);
         } else if (productId != null) {
@@ -110,10 +117,9 @@ public class StockMovementService implements IStockMovementService {
             movements = stockMovementRepository.findAll();
         }
 
-        return movements.stream()
-                .map(stockMovementMapper::toDto)
-                .collect(Collectors.toList());
+        return movements.stream().map(stockMovementMapper::toDto).collect(Collectors.toList());
     }
+
     public List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId) {
         List<StockMovement> movements = stockMovementRepository.findTop10ByGroupIdOrderByCreatedDateDesc(groupId);
         return movements.stream()
