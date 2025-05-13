@@ -3,6 +3,7 @@ package fr.sirine.stock_management_back.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.entities.*;
+import fr.sirine.stock_management_back.payload.request.StockMovementFilter;
 import fr.sirine.stock_management_back.repository.*;
 import fr.sirine.stock_management_back.service.impl.StockAlertService;
 import org.junit.jupiter.api.*;
@@ -164,12 +165,14 @@ class StockMovementControllerTest {
         product.setDescription("High-end laptop");
         product.setQuantity(10);
         productRepository.save(product);
+        StockMovementFilter filter = new StockMovementFilter(user.getId(), product.getId(), null, null, null);
 
         StockMovement stockMovement = new StockMovement(null, product, StockMovement.TypeMovement.ENTREE, 5, LocalDateTime.now(), null, user,group);
         stockMovementRepository.save(stockMovement);
 
-        mockMvc.perform(get("/stocks/history")
-                        .param("userId", user.getId().toString()))
+        mockMvc.perform(post("/stocks/history")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(filter)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].userId").value(user.getId()))
