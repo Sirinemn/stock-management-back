@@ -94,4 +94,11 @@ public class AdminController {
         MessageResponse messageResponse = new MessageResponse("Category added with success!");
         return new ResponseEntity<>( messageResponse, HttpStatus.CREATED);
     }
+    @Operation(summary = "Get all users by group ID", description = "Retrieve a list of all users by their group ID")
+    @GetMapping("/users/group/{groupId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<UserDto>> getAllUsersByGroupId(@PathVariable Integer groupId) {
+        List<UserDto> users = userService.findByGroupId(groupId);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }
