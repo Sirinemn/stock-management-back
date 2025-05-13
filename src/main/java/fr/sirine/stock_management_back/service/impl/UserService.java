@@ -74,4 +74,10 @@ public class UserService implements IUserService {
         user.setDateOfBirth(userDto.getDateOfBirth());
         userRepository.save(user);
     }
+    public List<UserDto> findByGroupId(Integer groupId) {
+        return userRepository.findByGroupId(groupId)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

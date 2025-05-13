@@ -1,5 +1,6 @@
 package fr.sirine.stock_management_back.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import fr.sirine.stock_management_back.entities.User;
@@ -13,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByRoles_Name(String role);
     List<User> findByCreatedBy_Id(Integer adminId);
+
+    List<User> findByGroupId(Integer groupId);
 }

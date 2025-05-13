@@ -13,4 +13,5 @@ public interface IUserService {
     void deleteUser(Integer id);
     void updateUserById(Integer id, UserDto userDto);
     List<UserDto> findByRole(String role);
+    List<UserDto> findByGroupId(Integer groupId);
 }
