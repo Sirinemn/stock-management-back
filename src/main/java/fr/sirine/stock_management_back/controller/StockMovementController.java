@@ -67,7 +67,7 @@ public class StockMovementController {
     })
     @GetMapping("/movements")
     public ResponseEntity<List<StockMovementDto>> getLastStockMovements(@RequestParam Integer groupId) {
-        List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
+        List<StockMovementDto> movements = stockMovementService.findByGroupIdOrderByDateDesc(groupId);
         return ResponseEntity.ok(movements);
     }
     @Operation(summary = "Supprimer un mouvement de stock", description = "Supprime un mouvement de stock donné.")
