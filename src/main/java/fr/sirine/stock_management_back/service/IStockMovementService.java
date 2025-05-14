@@ -14,6 +14,7 @@ public interface IStockMovementService {
     List<StockMovementDto> getStockMovementsByProduct(Integer productId, Integer groupId);
 
     List<StockMovementDto> findTop10ByGroupIdOrderByDateDesc(Integer groupId);
+    List<StockMovementDto> findByGroupIdOrderByDateDesc(Integer groupId);
     List<StockMovementDto> findByGroupId(Integer groupId);
     void deleteStockMovement(Integer productId);
     boolean hasStockMovement(Integer productId, Integer groupId);

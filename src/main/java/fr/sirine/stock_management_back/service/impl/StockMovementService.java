@@ -184,5 +184,11 @@ public class StockMovementService implements IStockMovementService {
         return new StockMovementDto(stockMovement.getId(), stockMovement.getProduct().getId(), stockMovement.getProduct().getName(), stockMovement.getUser().getId(), stockMovement.getUser().getFullName(), stockMovement.getType().toString(), stockMovement.getQuantity(),stockMovement.getCreatedDate(),
                 stockMovement.getLastModifiedDate(), stockMovement.getGroup().getId());
     }
+    public List<StockMovementDto> findByGroupIdOrderByDateDesc(Integer groupId) {
+        List<StockMovement> movements = stockMovementRepository.findByGroupIdOrderByCreatedDateDesc(groupId);
+        return movements.stream()
+                .map(stockMovementMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
 
