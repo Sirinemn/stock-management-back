@@ -21,7 +21,10 @@ public class DashboardService {
 
     public DashboardOverviewDto getDashboardOverview(Integer groupId) {
         long totalProducts = productService.countByGroupId(groupId);
-        long lowStockProducts = productService.countByGroupIdAndQuantityLessThan(groupId, 5);
+        long lowStockProducts = productService.findAllByGroupId(groupId)
+                .stream()
+                .filter(product -> product.getQuantity() < product.getThreshold())
+                .count();
         List<StockMovementDto> recentMovements = stockMovementService.findTop10ByGroupIdOrderByDateDesc(groupId);
 
         return new DashboardOverviewDto(totalProducts, lowStockProducts, recentMovements, groupId);
