@@ -1,6 +1,7 @@
 package fr.sirine.stock_management_back.service.impl;
 
 import fr.sirine.stock_management_back.dto.*;
+import fr.sirine.stock_management_back.entities.StockMovement;
 import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IStockMovementService;
 import org.springframework.stereotype.Service;
@@ -47,15 +48,20 @@ public class DashboardService {
     }
 
     private List<StockChartSeriesDto> generateStockChartData(Integer groupId) {
-        // Exemple simple : regroupement des mouvements par produit et date
         List<StockMovementDto> allMovements = stockMovementService.findByGroupId(groupId);
 
+        // Map<NomProduit, Map<Date, Quantité>>
         Map<String, Map<String, Integer>> dataMap = new HashMap<>();
 
         for (StockMovementDto movement : allMovements) {
             String productName = movement.getProductName();
-            String date = movement.getCreatedDate().toLocalDate().toString(); // Format "yyyy-MM-dd"
+            String date = movement.getCreatedDate().toLocalDate().toString(); // "yyyy-MM-dd"
             int quantity = movement.getQuantity();
+
+            // Ajuster la quantité selon le type de mouvement
+            if ("SORTIE".equalsIgnoreCase(movement.getType())) {
+                quantity = -quantity;
+            }
 
             dataMap
                     .computeIfAbsent(productName, k -> new HashMap<>())
@@ -76,6 +82,7 @@ public class DashboardService {
 
         return seriesList;
     }
+
     public List<ProductQuantityDto> getProductQuantities(Integer groupId) {
         return productService.findAllByGroupId(groupId).stream()
                 .map(p -> new ProductQuantityDto(p.getName(), p.getQuantity()))
@@ -85,7 +92,7 @@ public class DashboardService {
     public List<StockChartSeriesDto> getStockChart(Integer groupId) {
         List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
 
-        // Groupe par produit
+        // Regrouper les mouvements par produit
         Map<String, List<StockMovementDto>> groupedByProduct = movements.stream()
                 .collect(Collectors.groupingBy(StockMovementDto::getProductName));
 
@@ -93,9 +100,16 @@ public class DashboardService {
 
         for (Map.Entry<String, List<StockMovementDto>> entry : groupedByProduct.entrySet()) {
             String productName = entry.getKey();
+
+            // Trier les mouvements par date
             List<ChartPointDto> points = entry.getValue().stream()
                     .sorted(Comparator.comparing(StockMovementDto::getCreatedDate))
-                    .map(m -> new ChartPointDto(m.getCreatedDate().toString(), m.getQuantity()))
+                    .map(m -> {
+                        int adjustedQuantity = m.getType().equals(StockMovement.TypeMovement.SORTIE)
+                                ? -m.getQuantity()
+                                : m.getQuantity();
+                        return new ChartPointDto(m.getCreatedDate().toString(), adjustedQuantity);
+                    })
                     .collect(Collectors.toList());
 
             chartData.add(new StockChartSeriesDto(productName, points));
@@ -103,5 +117,6 @@ public class DashboardService {
 
         return chartData;
     }
+
 }
 
