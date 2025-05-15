@@ -5,10 +5,7 @@ import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IStockMovementService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +75,33 @@ public class DashboardService {
         }
 
         return seriesList;
+    }
+    public List<ProductQuantityDto> getProductQuantities(Integer groupId) {
+        return productService.findAllByGroupId(groupId).stream()
+                .map(p -> new ProductQuantityDto(p.getName(), p.getQuantity()))
+                .collect(Collectors.toList());
+    }
+
+    public List<StockChartSeriesDto> getStockChart(Integer groupId) {
+        List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
+
+        // Groupe par produit
+        Map<String, List<StockMovementDto>> groupedByProduct = movements.stream()
+                .collect(Collectors.groupingBy(StockMovementDto::getProductName));
+
+        List<StockChartSeriesDto> chartData = new ArrayList<>();
+
+        for (Map.Entry<String, List<StockMovementDto>> entry : groupedByProduct.entrySet()) {
+            String productName = entry.getKey();
+            List<ChartPointDto> points = entry.getValue().stream()
+                    .sorted(Comparator.comparing(StockMovementDto::getCreatedDate))
+                    .map(m -> new ChartPointDto(m.getCreatedDate().toString(), m.getQuantity()))
+                    .collect(Collectors.toList());
+
+            chartData.add(new StockChartSeriesDto(productName, points));
+        }
+
+        return chartData;
     }
 }
 
