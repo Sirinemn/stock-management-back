@@ -24,7 +24,7 @@ public class DashboardService {
         long totalProducts = productService.countByGroupId(groupId);
         long lowStockProducts = productService.findAllByGroupId(groupId)
                 .stream()
-                .filter(product -> product.getQuantity() < product.getThreshold())
+                .filter(product -> product.getQuantity() <= product.getThreshold())
                 .count();
 
         List<StockMovementDto> recentMovements = stockMovementService.findTop10ByGroupIdOrderByDateDesc(groupId);
@@ -105,7 +105,7 @@ public class DashboardService {
             List<ChartPointDto> points = entry.getValue().stream()
                     .sorted(Comparator.comparing(StockMovementDto::getCreatedDate))
                     .map(m -> {
-                        int adjustedQuantity = m.getType().equals(StockMovement.TypeMovement.SORTIE)
+                        int adjustedQuantity = StockMovement.TypeMovement.valueOf(m.getType()).equals(StockMovement.TypeMovement.SORTIE)
                                 ? -m.getQuantity()
                                 : m.getQuantity();
                         return new ChartPointDto(m.getCreatedDate().toString(), adjustedQuantity);

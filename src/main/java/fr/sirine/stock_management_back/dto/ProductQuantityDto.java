@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductQuantityDto {
-    private String name;
+    private String productName;
     private int quantity;
 }

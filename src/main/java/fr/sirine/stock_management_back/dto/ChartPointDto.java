@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChartPointDto {
-    private String name; // ex: "2025-05-10"
+    private String date; // ex: "2025-05-10"
     private int value;
 }
