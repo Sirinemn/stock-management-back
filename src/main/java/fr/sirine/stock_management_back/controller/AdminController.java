@@ -6,6 +6,7 @@ import fr.sirine.stock_management_back.exceptions.custom.IllegalStateException;
 import fr.sirine.stock_management_back.mapper.UserMapper;
 import fr.sirine.stock_management_back.payload.response.MessageResponse;
 import fr.sirine.stock_management_back.service.ICategoryService;
+import fr.sirine.stock_management_back.service.IGroupService;
 import fr.sirine.stock_management_back.service.IProductService;
 import fr.sirine.stock_management_back.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,13 +33,15 @@ public class AdminController {
     private final UserMapper userMapper;
     private final ICategoryService categoryService;
     private final IProductService productService;
+    private final IGroupService groupService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public AdminController(IUserService userService, UserMapper userMapper, ICategoryService categoryService, IProductService productService) {
+    public AdminController(IUserService userService, UserMapper userMapper, ICategoryService categoryService, IProductService productService, IGroupService groupService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.categoryService = categoryService;
         this.productService = productService;
+        this.groupService = groupService;
         logger.info("AdminController initialized");
     }
 
@@ -100,5 +103,13 @@ public class AdminController {
     public ResponseEntity<List<UserDto>> getAllUsersByGroupId(@PathVariable Integer groupId) {
         List<UserDto> users = userService.findByGroupId(groupId);
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+    @Operation(summary = "Update group name", description = "Update the name of a group by its ID")
+    @PutMapping("/group/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<MessageResponse> updateGroup(@PathVariable Integer id, @RequestParam("name") @NotBlank @Size(max = 63) String groupName) {
+        groupService.updateGroup(id, groupName);
+        MessageResponse messageResponse = new MessageResponse("updated with success!");
+        return new ResponseEntity<>( messageResponse, HttpStatus.OK);
     }
 }
