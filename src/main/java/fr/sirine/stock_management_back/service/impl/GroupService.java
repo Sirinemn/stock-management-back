@@ -11,18 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class GroupService implements IGroupService {
     private final GroupRepository groupRepository;
-    private final IUserService userService;
 
-    public GroupService(GroupRepository groupRepository, IUserService userService) {
+    public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-        this.userService = userService;
     }
     public Group findById(Integer id) {
         return groupRepository.findById(id).orElseThrow(() -> new GroupNotFountException("Group not found"));
     }
-    public void updateGroup(Integer userId, String groupName) {
-        User user = userService.findById(userId);
-        Group group = findById(user.getGroup().getId());
+    public void updateGroup(Integer id, String groupName) {
+        Group group = findById(id);
         group.setName(groupName);
         groupRepository.save(group);
     }

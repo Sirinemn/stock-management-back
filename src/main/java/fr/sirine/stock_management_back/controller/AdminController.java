@@ -107,8 +107,9 @@ public class AdminController {
     @Operation(summary = "Update group name", description = "Update the name of a group by its ID")
     @PutMapping("/group/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<MessageResponse> updateGroup(@PathVariable Integer id, @RequestParam("name") @NotBlank @Size(max = 63) String groupName) {
-        groupService.updateGroup(id, groupName);
+    public ResponseEntity<MessageResponse> updateGroup(@PathVariable Integer userId, @RequestParam("name") @NotBlank @Size(max = 63) String groupName) {
+        User user = userService.findById(userId);
+        groupService.updateGroup(user.getGroup().getId(), groupName);
         MessageResponse messageResponse = new MessageResponse("updated with success!");
         return new ResponseEntity<>( messageResponse, HttpStatus.OK);
     }
