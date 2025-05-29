@@ -1,8 +1,10 @@
 package fr.sirine.stock_management_back.service;
 
 import fr.sirine.stock_management_back.dto.DashboardOverviewDto;
+import fr.sirine.stock_management_back.dto.ProductDto;
 import fr.sirine.stock_management_back.dto.StockMovementDto;
 import fr.sirine.stock_management_back.entities.Group;
+import fr.sirine.stock_management_back.entities.Product;
 import fr.sirine.stock_management_back.service.impl.DashboardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,9 +46,19 @@ public class DashboardServiceTest {
                 .lowStockProducts(1)
                 .recentMovements(List.of(stockMovementDto))
                 .build();
+        ProductDto pr = ProductDto.builder()
+                .id(1)
+                .name("product")
+                .quantity(5)
+                .threshold(10)
+                .groupId(group.getId())
+                .build();
         // When
         when(productService.countByGroupId(group.getId())).thenReturn(1L);
-        when(productService.countByGroupIdAndQuantityLessThan(group.getId(),5)).thenReturn(1L);
+        when(productService.findAllByGroupId(group.getId()))
+                .thenReturn(List.of(pr));
+        when(stockMovementService.findTop10ByGroupIdOrderByDateDesc(group.getId()))
+                .thenReturn(List.of(stockMovementDto));
         when(stockMovementService.findTop10ByGroupIdOrderByDateDesc(group.getId())).thenReturn(List.of(stockMovementDto));
         // Then
         DashboardOverviewDto result = dashboardService.getDashboardOverview(group.getId());
