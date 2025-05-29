@@ -29,58 +29,38 @@ public class DashboardService {
 
         List<StockMovementDto> recentMovements = stockMovementService.findTop10ByGroupIdOrderByDateDesc(groupId);
 
-        // Pour le pie chart : produit -> quantité
-        List<ProductQuantityDto> productQuantities = productService.findAllByGroupId(groupId).stream()
-                .map(product -> new ProductQuantityDto(product.getName(), product.getQuantity()))
-                .collect(Collectors.toList());
-
-        // Pour le line chart : Produit -> Évolution de quantité dans le temps
-        List<StockChartSeriesDto> stockChart = generateStockChartData(groupId);
+        // Pour le pie chart : Stock Normal vs Stock Faible
+        List<ProductQuantityDto> stockStatusChart = getStockStatusChart(totalProducts, lowStockProducts);
 
         return DashboardOverviewDto.builder()
                 .totalProducts(totalProducts)
                 .lowStockProducts(lowStockProducts)
                 .recentMovements(recentMovements)
-                .productQuantities(productQuantities)
-                .stockChart(stockChart)
+                .productQuantities(stockStatusChart)  // Renommé pour plus de clarté
                 .groupId(groupId)
                 .build();
     }
 
-    private List<StockChartSeriesDto> generateStockChartData(Integer groupId) {
-        List<StockMovementDto> allMovements = stockMovementService.findByGroupId(groupId);
+    private List<ProductQuantityDto> getStockStatusChart(long totalProducts, long lowStockProducts) {
+        List<ProductQuantityDto> chartData = new ArrayList<>();
 
-        // Map<NomProduit, Map<Date, Quantité>>
-        Map<String, Map<String, Integer>> dataMap = new HashMap<>();
+        long normalStockProducts = totalProducts - lowStockProducts;
 
-        for (StockMovementDto movement : allMovements) {
-            String productName = movement.getProductName();
-            String date = movement.getCreatedDate().toLocalDate().toString(); // "yyyy-MM-dd"
-            int quantity = movement.getQuantity();
-
-            // Ajuster la quantité selon le type de mouvement
-            if ("SORTIE".equalsIgnoreCase(movement.getType())) {
-                quantity = -quantity;
-            }
-
-            dataMap
-                    .computeIfAbsent(productName, k -> new HashMap<>())
-                    .merge(date, quantity, Integer::sum);
+        // Ajouter les données pour le pie chart
+        if (normalStockProducts > 0) {
+            chartData.add(new ProductQuantityDto("Stock Normal", (int) normalStockProducts));
         }
 
-        List<StockChartSeriesDto> seriesList = new ArrayList<>();
-
-        for (Map.Entry<String, Map<String, Integer>> entry : dataMap.entrySet()) {
-            String productName = entry.getKey();
-            List<ChartPointDto> points = entry.getValue().entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .map(e -> new ChartPointDto(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
-
-            seriesList.add(new StockChartSeriesDto(productName, points));
+        if (lowStockProducts > 0) {
+            chartData.add(new ProductQuantityDto("Stock Faible", (int) lowStockProducts));
         }
 
-        return seriesList;
+        // Si aucun produit, ajouter une entrée pour éviter un graphique vide
+        if (totalProducts == 0) {
+            chartData.add(new ProductQuantityDto("Aucun Produit", 0));
+        }
+
+        return chartData;
     }
 
     public List<ProductQuantityDto> getProductQuantities(Integer groupId) {
@@ -88,31 +68,58 @@ public class DashboardService {
                 .map(p -> new ProductQuantityDto(p.getName(), p.getQuantity()))
                 .collect(Collectors.toList());
     }
+    public StockStatsDto getStockStats(Integer groupId) {
+        List<ProductDto> products = productService.findAllByGroupId(groupId);
 
-    public List<StockChartSeriesDto> getStockChart(Integer groupId) {
-        List<StockMovementDto> movements = stockMovementService.findByGroupId(groupId);
+        long totalProducts = products.size();
+        long lowStockProducts = products.stream()
+                .filter(product -> product.getQuantity() <= product.getThreshold())
+                .count();
+        long outOfStockProducts = products.stream()
+                .filter(product -> product.getQuantity() == 0)
+                .count();
 
-        // Regrouper les mouvements par produit
-        Map<String, List<StockMovementDto>> groupedByProduct = movements.stream()
-                .collect(Collectors.groupingBy(StockMovementDto::getProductName));
+        int totalQuantity = products.stream()
+                .mapToInt(ProductDto::getQuantity)
+                .sum();
 
-        List<StockChartSeriesDto> chartData = new ArrayList<>();
+        return StockStatsDto.builder()
+                .totalProducts(totalProducts)
+                .lowStockProducts(lowStockProducts)
+                .outOfStockProducts(outOfStockProducts)
+                .normalStockProducts(totalProducts - lowStockProducts)
+                .totalQuantity(totalQuantity)
+                .build();
+    }
+    public List<ProductQuantityDto> getStockCategoryChart(Integer groupId) {
+        List<ProductDto> products = productService.findAllByGroupId(groupId);
 
-        for (Map.Entry<String, List<StockMovementDto>> entry : groupedByProduct.entrySet()) {
-            String productName = entry.getKey();
+        List<ProductQuantityDto> chartData = new ArrayList<>();
 
-            // Trier les mouvements par date
-            List<ChartPointDto> points = entry.getValue().stream()
-                    .sorted(Comparator.comparing(StockMovementDto::getCreatedDate))
-                    .map(m -> {
-                        int adjustedQuantity = StockMovement.TypeMovement.valueOf(m.getType()).equals(StockMovement.TypeMovement.SORTIE)
-                                ? -m.getQuantity()
-                                : m.getQuantity();
-                        return new ChartPointDto(m.getCreatedDate().toString(), adjustedQuantity);
-                    })
-                    .collect(Collectors.toList());
+        long outOfStock = products.stream()
+                .filter(product -> product.getQuantity() == 0)
+                .count();
 
-            chartData.add(new StockChartSeriesDto(productName, points));
+        long lowStock = products.stream()
+                .filter(product -> product.getQuantity() > 0 && product.getQuantity() <= product.getThreshold())
+                .count();
+
+        long normalStock = products.stream()
+                .filter(product -> product.getQuantity() > product.getThreshold())
+                .count();
+
+        if (outOfStock > 0) {
+            chartData.add(new ProductQuantityDto("Rupture de Stock", (int) outOfStock));
+        }
+        if (lowStock > 0) {
+            chartData.add(new ProductQuantityDto("Stock Faible", (int) lowStock));
+        }
+        if (normalStock > 0) {
+            chartData.add(new ProductQuantityDto("Stock Normal", (int) normalStock));
+        }
+
+        if (chartData.isEmpty()) {
+            chartData.add(new ProductQuantityDto("Aucun Produit", 0));
         }
 
         return chartData;
