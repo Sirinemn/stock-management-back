@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/contact")
 public class ContactController {
     private final EmailService emailService;
-    @Value("app.email.support")
+    @Value("${app.mail.support}")
     String supportEmail;
     private final String template = "emails/contact-email";
 
