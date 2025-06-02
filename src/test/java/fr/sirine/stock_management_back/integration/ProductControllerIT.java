@@ -166,7 +166,7 @@ class ProductControllerIT {
                 .category(category)
                 .build());
 
-        mockMvc.perform(delete("/products/" + product.getId()))
+        mockMvc.perform(delete("/products/" + product.getId()).param("groupId", String.valueOf(product.getGroup().getId())))
                 .andExpect(status().isNoContent());
 
         // Vérification que le produit a bien été supprimé
