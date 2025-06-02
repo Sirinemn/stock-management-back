@@ -22,6 +22,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,16 +41,18 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final SessionRegistry sessionRegistry;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final GroupRepository groupRepository;
 
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtService jwtService, PasswordEncoder passwordEncoder, EmailService emailService, AuthenticationManager authenticationManager, GroupRepository groupRepository) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, JwtService jwtService, PasswordEncoder passwordEncoder, SessionRegistry sessionRegistry, EmailService emailService, AuthenticationManager authenticationManager, GroupRepository groupRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.sessionRegistry = sessionRegistry;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
         this.groupRepository = groupRepository;
@@ -153,6 +157,17 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setFirstLogin(false); // Désactiver le mode "première connexion"
         userRepository.save(user);
+        invalidateUserSessions(user.getEmail());
+    }
+    private void invalidateUserSessions(String username) {
+        // Obtenir toutes les sessions de l'utilisateur
+        sessionRegistry.getAllPrincipals().stream()
+                .filter(p -> p instanceof UserDetails && ((UserDetails) p).getUsername().equals(username))
+                .findFirst()
+                .ifPresent(principal -> {
+                    // Invalider chaque session
+                    sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+                });
     }
     public User getAuthenticatedUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
