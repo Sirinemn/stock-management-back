@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Inscription réussie</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
         }
@@ -14,36 +14,53 @@
             background-color: #ffffff;
             border: 1px solid #dddddd;
             border-radius: 8px;
-            padding: 20px;
+            padding: 30px;
             max-width: 600px;
             margin: 0 auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         p {
-            margin: 0 0 10px;
+            font-size: 16px;
             line-height: 1.6;
+            margin-bottom: 15px;
+            color: #333333;
+        }
+        ul {
+            padding-left: 20px;
+            color: #333333;
+        }
+        li {
+            margin-bottom: 8px;
         }
         strong {
-            color: #333333;
+            color: #000000;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666666;
+            border-top: 1px solid #eeeeee;
+            padding-top: 15px;
         }
     </style>
 </head>
 <body>
 <div class="email-container">
-    <p>Bonjour <span th:text="${firstname}"></span> <span th:text="${lastname}"></span>,</p>
+    <p>Bonjour <strong><span th:text="${firstname}"></span> <span th:text="${lastname}"></span></strong>,</p>
 
-    <p>Votre compte a été créé avec succès.</p>
+    <p>Votre compte a été créé avec succès. Voici vos identifiants :</p>
 
-    <p><strong>Identifiants :</strong></p>
     <ul>
-        <li>Email : <span th:text="${email}"></span></li>
-        <li>Mot de passe commence par : <span th:text="${password}"></span></li>
+        <li><strong>Email :</strong> <span th:text="${email}"></span></li>
+        <li><strong>Mot de passe (début) :</strong> <span th:text="${password}"></span>…</li>
     </ul>
 
-    <p>Merci de vous connecter et de changer votre mot de passe dès votre première connexion.</p>
+    <p><strong>Important :</strong> Pour des raisons de sécurité, merci de vous connecter dès que possible et de modifier votre mot de passe.</p>
 
-    <p>Cordialement,</p>
-    <p>L'équipe de gestion des stocks</p>
+    <div class="footer">
+        <p>Cordialement,</p>
+        <p><strong>L'équipe de Stock-Zen</strong></p>
+    </div>
 </div>
 </body>
 </html>

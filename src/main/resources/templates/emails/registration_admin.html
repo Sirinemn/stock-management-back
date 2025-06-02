@@ -32,27 +32,36 @@
         .cta {
             display: inline-block;
             margin-top: 20px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             color: #ffffff;
-            background-color: #007bff;
+            background-color: #28a745;
             text-decoration: none;
             border-radius: 5px;
         }
         .cta:hover {
-            background-color: #0056b3;
+            background-color: #218838;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666666;
         }
     </style>
 </head>
 <body>
 <div class="email-container">
-    <h1>Bienvenue sur l'application de gestion des stocks !</h1>
+    <h1>Bienvenue sur Stock-Zen !</h1>
     <p>Bonjour <strong><span th:text="${firstname}"></span> <span th:text="${lastname}"></span></strong>,</p>
-    <p>Nous sommes heureux de vous informer que votre inscription a été réalisée avec succès.</p>
-    <p>Vous pouvez maintenant commencer à gérer vos produits ou ajouter des utilisateurs pour vous aider dans la gestion.</p>
+    <p>Votre inscription a été réalisée avec succès.</p>
+    <p>Vous pouvez dès maintenant commencer à gérer vos produits ou inviter d'autres utilisateurs pour collaborer avec vous.</p>
     <p>Pour vous connecter, cliquez sur le bouton ci-dessous :</p>
-    <a href="${loginurl}" class="cta">Se connecter</a>
-    <p>Cordialement,<br>L'équipe de gestion des stocks</p>
+    <a th:href="${loginurl}" class="cta">Se connecter</a>
+
+    <div class="footer">
+        <p>Cordialement,</p>
+        <p><strong>L'équipe de Stock-Zen</strong></p>
+    </div>
 </div>
 </body>
 </html>
