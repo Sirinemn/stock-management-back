@@ -25,7 +25,9 @@ public enum BusinessErrorCodes {
     PRODUCT_ALREADY_EXIST(1015, "Nom du produit déja utilisé", HttpStatus.CONFLICT),
     ILLEGAL_STATE(1016, "État illégal", HttpStatus.BAD_REQUEST),
     STOCK_MOVEMENT_NOT_FOUND(1017, "Mouvement de stock non trouvé", HttpStatus.NOT_FOUND),
-    INTERNAL_SERVER_ERROR(1018, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
+    INVALID_PASSWORD(1018,"L\'ancien mot de passe est incorrect", HttpStatus.BAD_REQUEST),
+    SAME_PASSWORD(1019, "Le nouveau mot de passe doit être différent de l'ancien", HttpStatus.BAD_REQUEST),
+    INTERNAL_SERVER_ERROR(1020, "Erreur interne du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
     private final int code;
