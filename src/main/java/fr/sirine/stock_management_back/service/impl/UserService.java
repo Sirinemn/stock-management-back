@@ -85,4 +85,10 @@ public class UserService implements IUserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
+
+    @Override
+    public void updatePassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
 }

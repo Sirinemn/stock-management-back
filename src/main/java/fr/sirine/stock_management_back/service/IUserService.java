@@ -15,4 +15,5 @@ public interface IUserService {
     List<UserDto> findByRole(String role);
     List<UserDto> findByGroupId(Integer groupId);
     User findByEmail(String email);
+    void updatePassword(Integer userId, String newPassword);
 }
