@@ -115,6 +115,11 @@ public class GlobalExceptionHandler {
         logger.error("Same password", exp);
         return buildResponseEntity(BusinessErrorCodes.SAME_PASSWORD, exp.getMessage());
     }
+    @ExceptionHandler(LinkExpiredException.class)
+    public ResponseEntity<ExceptionResponse> handleException( LinkExpiredException exp) {
+        logger.error("Link expired");
+        return buildResponseEntity(BusinessErrorCodes.LINK_EXPIRED, exp.getMessage());
+    }
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ExceptionResponse> handleException(IllegalStateException exp) {
         logger.error("Illegal state", exp);
