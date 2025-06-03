@@ -37,7 +37,7 @@ public class PasswordResetController {
 
             if (!isValid) {
                 return ResponseEntity.badRequest()
-                        .body(new MessageResponse("Token invalide ou expiré"));
+                        .body(new MessageResponse("Lien invalide ou expiré"));
             }
 
             User user = tokenService.getUserByToken(token);
@@ -47,7 +47,7 @@ public class PasswordResetController {
 
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Token invalide"));
+                    .body(new MessageResponse("Lien invalide"));
         }
     }
     @PostMapping("/reset-password")
@@ -56,7 +56,7 @@ public class PasswordResetController {
             // Valider le token
             if (!tokenService.isTokenValid(request.getToken())) {
                 return ResponseEntity.badRequest()
-                        .body(new MessageResponse("Token invalide ou expiré"));
+                        .body(new MessageResponse("Lien invalide ou expiré"));
             }
 
             // Récupérer l'utilisateur
