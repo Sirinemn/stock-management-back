@@ -21,7 +21,7 @@ public class PasswordResetTokenService {
     private final PasswordResetTokenRepository tokenRepository;
     private final IUserService userService;
     private final EmailService emailService;
-    @Value("${frontend.url:http://localhost:4200}")
+    @Value("${app.front.url}")
     private String frontendUrl;
 
     public PasswordResetTokenService(PasswordResetTokenRepository passwordResetTokenRepository, IUserService userService, EmailService emailService) {
@@ -42,10 +42,11 @@ public class PasswordResetTokenService {
 
             tokenRepository.save(resetToken);
 
-            String resetLink = frontendUrl + "/reset-password?token=" + token;
+            String resetLink = frontendUrl + "/reset-password/" + token;
             Map<String, Object> variables = new HashMap<>();
             variables.put("resetLink", resetLink);
             variables.put("username", user.getFullName());
+            System.out.println(resetLink);
 
             emailService.sendEmail(
                     email,

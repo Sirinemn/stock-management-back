@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
-    @Value("${app.url.login}")
+    @Value("${app.front.url}")
     private String loginUrl;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -85,7 +85,9 @@ public class AuthenticationService {
                 "firstname", user.getFirstname(),
                 "lastname", user.getLastname(),
                 "email", user.getEmail(),
-                "password", request.getPassword().substring(0, 3) + "*".repeat(passwordLength - 3));
+                "password", request.getPassword().substring(0, 3) + "*".repeat(passwordLength - 3),
+                "loginurl", loginUrl+"auth/login");
+
 
         emailService.sendEmail(user.getEmail(), "Inscription réussie","emails/registration" , emailMessage);
         return user;
@@ -119,7 +121,7 @@ public class AuthenticationService {
         Map<String, Object> emailMessage = Map.of(
                 "firstname", admin.getFirstname(),
                 "lastname", admin.getLastname(),
-                "loginurl", loginUrl
+                "loginurl", loginUrl+"/auth/login"
                 );
         emailService.sendEmail(admin.getEmail(), "Inscription réussie","emails/registration_admin" , emailMessage);
 
