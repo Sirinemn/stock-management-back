@@ -3,10 +3,7 @@ package fr.sirine.stock_management_back.auth;
 import fr.sirine.stock_management_back.email.EmailService;
 import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.User;
-import fr.sirine.stock_management_back.exceptions.custom.EmailAlreadyUsedException;
-import fr.sirine.stock_management_back.exceptions.custom.GroupAlreadyExistException;
-import fr.sirine.stock_management_back.exceptions.custom.RoleNotFoundException;
-import fr.sirine.stock_management_back.exceptions.custom.UserNotFoundException;
+import fr.sirine.stock_management_back.exceptions.custom.*;
 import fr.sirine.stock_management_back.jwt.JwtService;
 import fr.sirine.stock_management_back.payload.request.ChangePasswordRequest;
 import fr.sirine.stock_management_back.payload.request.LoginRequest;
@@ -153,9 +150,20 @@ public class AuthenticationService {
     public void changePassword(ChangePasswordRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(UserNotFoundException::new);
+        Role role = new Role("USER");
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new SamePasswordException();
+        }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        user.setFirstLogin(false); // Désactiver le mode "première connexion"
+        if (user.getRoles().contains(role)) {
+            user.setFirstLogin(false); // Désactiver le mode "première connexion"
+        }
         userRepository.save(user);
         invalidateUserSessions(user.getEmail());
     }
