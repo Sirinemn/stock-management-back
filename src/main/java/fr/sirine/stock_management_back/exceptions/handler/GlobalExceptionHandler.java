@@ -105,6 +105,16 @@ public class GlobalExceptionHandler {
         logger.error("Role not found", exp);
         return buildResponseEntity(BusinessErrorCodes.ROLE_NOT_FOUND, exp.getMessage());
     }
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ExceptionResponse> handleException(InvalidPasswordException exp) {
+        logger.error("Invalid password", exp);
+        return buildResponseEntity(BusinessErrorCodes.INVALID_PASSWORD, exp.getMessage());
+    }
+    @ExceptionHandler(SamePasswordException.class)
+    public ResponseEntity<ExceptionResponse> handleException(SamePasswordException exp) {
+        logger.error("Same password", exp);
+        return buildResponseEntity(BusinessErrorCodes.SAME_PASSWORD, exp.getMessage());
+    }
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ExceptionResponse> handleException(IllegalStateException exp) {
         logger.error("Illegal state", exp);
