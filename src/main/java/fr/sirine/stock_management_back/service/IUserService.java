@@ -14,4 +14,5 @@ public interface IUserService {
     void updateUserById(Integer id, UserDto userDto);
     List<UserDto> findByRole(String role);
     List<UserDto> findByGroupId(Integer groupId);
+    User findByEmail(String email);
 }

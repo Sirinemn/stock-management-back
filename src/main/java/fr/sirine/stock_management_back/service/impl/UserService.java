@@ -80,4 +80,9 @@ public class UserService implements IUserService {
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    }
 }
