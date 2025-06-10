@@ -1,5 +1,6 @@
 package fr.sirine.stock_management_back.monitor;
 
+import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
 import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.repository.GroupRepository;
@@ -25,6 +26,9 @@ public class MonitorConfig {
                                              RoleRepository roleRepository,
                                              PasswordEncoder passwordEncoder) {
         return args -> {
+            if (groupRepository.findByName(monitorProps.getGroup()).isEmpty()) {
+                groupRepository.save(Group.builder().name(monitorProps.getGroup()).build());
+            }
             if (userRepository.findByEmail(monitorProps.getEmail()).isEmpty()) {
                 User monitorUser = new User();
                 monitorUser.setFirstname(monitorProps.getFirstname());
