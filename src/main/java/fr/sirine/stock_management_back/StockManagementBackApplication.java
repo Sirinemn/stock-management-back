@@ -36,6 +36,9 @@ public class StockManagementBackApplication {
 			if (roleRepository.findByName("ADMIN").isEmpty()) {
 				roleRepository.save(Role.builder().name("ADMIN").build());
 			}
+			if (roleRepository.findByName("MONITORING").isEmpty()) {
+				roleRepository.save(Role.builder().name("MONITORING").build());
+			}
 			if (roleRepository.findByName("CLIENT").isEmpty()) {
 				roleRepository.save(Role.builder().name("CLIENT").build());
 			}
@@ -44,18 +47,6 @@ public class StockManagementBackApplication {
 			}
 			if (groupRepository.findByName("group").isEmpty()){
 				groupRepository.save(Group.builder().name("group").build());
-			}
-			// Initialiser l'utilisateur admin
-			if (userRepository.findByEmail("admin@mail.fr").isEmpty()) {
-				User admin = new User();
-				admin.setFirstname("admin");
-				admin.setEmail("admin@mail.fr");
-				admin.setLastname("Last");
-				admin.setGroup(groupRepository.findByName("group").orElseThrow(() -> new RuntimeException("Admin Group not found")));
-				admin.setPassword(passwordEncoder().encode("adminpassword"));
-				Role adminRole = roleRepository.findByName("ADMIN").orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
-				admin.setRoles(new ArrayList<>(Collections.singleton(adminRole)));
-				userRepository.save(admin);
 			}
 		};
 	}
