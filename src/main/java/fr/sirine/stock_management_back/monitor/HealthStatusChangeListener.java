@@ -1,6 +1,9 @@
 package fr.sirine.stock_management_back.monitor;
 
+import fr.sirine.stock_management_back.auth.AuthenticationController;
 import fr.sirine.stock_management_back.email.EmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthComponent;
@@ -18,6 +21,7 @@ public class HealthStatusChangeListener {
     @Value("${monitor.email}")
     private String monitoringEmail;
     private boolean wasDown = false;
+    private static final Logger logger = LoggerFactory.getLogger(HealthStatusChangeListener.class);
 
     public HealthStatusChangeListener(HealthEndpoint healthEndpoint, EmailService emailService) {
         this.healthEndpoint = healthEndpoint;
@@ -40,7 +44,10 @@ public class HealthStatusChangeListener {
                             "details", details.toString()  // ou JSON.stringify(details) si besoin
                     )
             );
+        } else {
+            logger.warn("HealthComponent is not an instance of Health. Cannot extract details.");
         }
+
     }
     private void sendEmailAlert(Status status, Map<String, Object> details) {
         emailService.sendEmail(
