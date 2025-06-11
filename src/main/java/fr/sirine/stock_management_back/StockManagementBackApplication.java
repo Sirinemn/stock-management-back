@@ -2,7 +2,6 @@ package fr.sirine.stock_management_back;
 
 import fr.sirine.stock_management_back.entities.Group;
 import fr.sirine.stock_management_back.entities.Role;
-import fr.sirine.stock_management_back.entities.User;
 import fr.sirine.stock_management_back.repository.GroupRepository;
 import fr.sirine.stock_management_back.repository.RoleRepository;
 import fr.sirine.stock_management_back.repository.UserRepository;
@@ -14,9 +13,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @SpringBootApplication
 @EnableJpaAuditing
