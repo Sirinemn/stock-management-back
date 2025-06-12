@@ -50,14 +50,9 @@ class ProductControllerIT {
     private Category category;
     private User user;
     private Group group;
-    private Role role;
 
     @BeforeEach
     void setup() {
-        role = Role.builder()
-                .name("MONITORING")
-                .build();
-        role = roleRepository.save(role);
         group = groupRepository.save(Group.builder()
                 .name("Test Group")
                 .build());
@@ -76,7 +71,6 @@ class ProductControllerIT {
     }
     @AfterEach
     void tearDown() {
-        roleRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         userRepository.deleteAll();

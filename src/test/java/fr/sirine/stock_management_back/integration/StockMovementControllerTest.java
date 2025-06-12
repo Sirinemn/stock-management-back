@@ -58,14 +58,9 @@ class StockMovementControllerTest {
     private User user;
     private Category category;
     private Group group;
-    private Role role;
 
     @BeforeEach
     void setup() {
-        role = Role.builder()
-                .name("MONITORING")
-                .build();
-        roleRepository.save(role);
         group = Group.builder()
                 .name("group")
                 .build();
@@ -97,7 +92,6 @@ class StockMovementControllerTest {
 
     @AfterEach
     void cleanUp() {
-        roleRepository.deleteAll();
         stockMovementRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();

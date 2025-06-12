@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -21,6 +22,7 @@ public class MonitorConfig {
     private final MonitorAccountProperties monitorProps;
 
     @Bean
+    @Order(2)
     public CommandLineRunner initMonitorUser(UserRepository userRepository,
                                              GroupRepository groupRepository,
                                              RoleRepository roleRepository,
