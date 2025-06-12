@@ -67,6 +67,7 @@ public class AdminControllerIT {
     private User admin;
     private Role adminRole;
     private Role userRole;
+    private Role monitorRole;
 
     @BeforeEach
     void setUp() {
@@ -74,6 +75,13 @@ public class AdminControllerIT {
                 .orElseGet(() -> {
                     Role newRole = Role.builder()
                             .name("ADMIN")
+                            .build();
+                    return roleRepository.save(newRole);
+                });
+        monitorRole = roleRepository.findByName("MONITORING")
+                .orElseGet(() -> {
+                    Role newRole = Role.builder()
+                            .name("MONITORING")
                             .build();
                     return roleRepository.save(newRole);
                 });

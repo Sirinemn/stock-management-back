@@ -76,6 +76,7 @@ class ProductControllerIT {
     }
     @AfterEach
     void tearDown() {
+        roleRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         userRepository.deleteAll();
