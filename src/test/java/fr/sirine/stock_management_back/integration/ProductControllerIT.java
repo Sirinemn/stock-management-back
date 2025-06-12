@@ -2,14 +2,8 @@ package fr.sirine.stock_management_back.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.sirine.stock_management_back.dto.ProductDto;
-import fr.sirine.stock_management_back.entities.Category;
-import fr.sirine.stock_management_back.entities.Group;
-import fr.sirine.stock_management_back.entities.Product;
-import fr.sirine.stock_management_back.entities.User;
-import fr.sirine.stock_management_back.repository.CategoryRepository;
-import fr.sirine.stock_management_back.repository.GroupRepository;
-import fr.sirine.stock_management_back.repository.ProductRepository;
-import fr.sirine.stock_management_back.repository.UserRepository;
+import fr.sirine.stock_management_back.entities.*;
+import fr.sirine.stock_management_back.repository.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,6 +41,8 @@ class ProductControllerIT {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -54,9 +50,14 @@ class ProductControllerIT {
     private Category category;
     private User user;
     private Group group;
+    private Role role;
 
     @BeforeEach
     void setup() {
+        role = Role.builder()
+                .name("MONITORING")
+                .build();
+        role = roleRepository.save(role);
         group = groupRepository.save(Group.builder()
                 .name("Test Group")
                 .build());
