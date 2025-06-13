@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>fr.sirine</groupId>
 	<artifactId>stock-management-back</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>stock-management-back</name>
 	<description>Application de gestion de stock</description>
 	<url/>

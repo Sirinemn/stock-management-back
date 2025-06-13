@@ -86,7 +86,7 @@ public class AuthenticationService {
                 "lastname", user.getLastname(),
                 "email", user.getEmail(),
                 "password", request.getPassword().substring(0, 3) + "*".repeat(passwordLength - 3),
-                "loginurl", loginUrl+"auth/login");
+                "loginurl", loginUrl+"/auth/login");
 
 
         emailService.sendEmail(user.getEmail(), "Inscription réussie","emails/registration" , emailMessage);
